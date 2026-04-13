@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aji L3bo Café - Gestion des Réservations</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#2a2a2a",
+                        "outline-variant": "#4d4635",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#353534",
+                        "primary-fixed-dim": "#e9c349",
+                        "outline": "#99907c",
+                        "on-primary-fixed": "#241a00",
+                        "secondary-container": "#40484e",
+                        "on-tertiary-fixed-variant": "#27438a",
+                        "primary": "#f2ca50",
+                        "surface-tint": "#e9c349",
+                        "surface-dim": "#131313",
+                        "primary-container": "#d4af37",
+                        "on-tertiary-container": "#254188",
+                        "on-surface": "#e5e2e1",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-secondary-container": "#afb6be",
+                        "tertiary-fixed-dim": "#b4c5ff",
+                        "tertiary-container": "#97b0ff",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed": "#00174b",
+                        "on-primary-container": "#554300",
+                        "on-secondary-fixed-variant": "#40484e",
+                        "secondary-fixed-dim": "#c0c7cf",
+                        "tertiary-fixed": "#dbe1ff",
+                        "surface": "#131313",
+                        "primary-fixed": "#ffe088",
+                        "secondary": "#c0c7cf",
+                        "surface-container": "#201f1f",
+                        "on-background": "#e5e2e1",
+                        "error-container": "#93000a",
+                        "on-tertiary": "#082b72",
+                        "on-secondary": "#2a3137",
+                        "background": "#131313",
+                        "surface-container-low": "#1c1b1b",
+                        "on-primary": "#3c2f00",
+                        "inverse-on-surface": "#313030",
+                        "inverse-surface": "#e5e2e1",
+                        "tertiary": "#bfcdff",
+                        "on-secondary-fixed": "#151c22",
+                        "inverse-primary": "#735c00",
+                        "secondary-fixed": "#dce3eb",
+                        "on-error": "#690005",
+                        "surface-variant": "#353534",
+                        "surface-bright": "#393939",
+                        "on-surface-variant": "#d0c5af",
+                        "on-primary-fixed-variant": "#574500"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Epilogue"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #131313;
+            color: #e5e2e1;
+        }
+        h1, h2, h3 {
+            font-family: 'Epilogue', sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-zinc-950/60 backdrop-blur-xl docked full-width top-0 z-50 shadow-[0_4px_40px_0_rgba(233,195,73,0.08)] flex justify-between items-center px-8 py-4 w-full sticky">
+<div class="flex items-center gap-8">
+<div class="text-2xl font-black uppercase text-yellow-600 dark:text-yellow-500 font-['Epilogue'] tracking-tighter leading-tight">
+                Aji L3bo Café
+            </div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-zinc-400 font-medium hover:text-yellow-400 transition-colors duration-300 active:scale-95 transition-transform" href="#">Dashboard</a>
+<a class="text-yellow-500 border-b-2 border-yellow-500 pb-1 font-bold hover:text-yellow-400 transition-colors duration-300 active:scale-95 transition-transform" href="#">Reservations</a>
+<a class="text-zinc-400 font-medium hover:text-yellow-400 transition-colors duration-300 active:scale-95 transition-transform" href="#">Inventory</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-zinc-400 hover:text-yellow-400 transition-colors duration-300 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-zinc-400 hover:text-yellow-400 transition-colors duration-300 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-zinc-800 border border-outline-variant overflow-hidden">
+<img alt="Admin Avatar" data-alt="Professional headshot of a café administrator in a dark studio setting with warm amber lighting highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5WfNmHc9O2w33rEgOofeuoOOLn_VDcZe648NrVk34WxGOAuEhO_C0iZnDVC4SaH5lwxTTjYiT87R6sCJZR--wcY8JFuHFujTYvSTHUkbqRv2NWgBHu2mn7yShF6UgVfpoDH89ifkBTsZExvehflQ85QXgpAtFYh5FfhQq8D4HgajARiJD5l1qYAmJEUma6jZzrW52yPzW0Zj7EcV6zeb4_F4RDVZDcvWkYZ4mWU72b_nv3bQWdQVl8us42sBKN8WnL6egxVjtgmA"/>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-8 py-12">
+<!-- Hero Section -->
+<div class="mb-12 relative overflow-hidden rounded-xl bg-surface-container-low p-10 border border-outline-variant/10">
+<div class="relative z-10">
+<h1 class="text-5xl font-extrabold tracking-tighter text-on-surface mb-2">Gestion des Réservations</h1>
+<p class="text-primary text-lg font-medium opacity-80 uppercase tracking-widest">Toutes les réservations</p>
+</div>
+<!-- Aesthetic Overlap -->
+<div class="absolute -right-20 -top-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
+<div class="absolute right-10 bottom-0 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined !text-[160px]">calendar_today</span>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 gap-4 bg-surface-container-lowest/50 p-6 rounded-xl border-b border-outline-variant/10">
+<div class="flex flex-wrap gap-4 items-center w-full md:w-auto">
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-outline uppercase tracking-wider px-1">Date</label>
+<div class="relative">
+<input class="bg-surface-container-high border-none text-on-surface rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/50 transition-all w-full md:w-48 text-sm appearance-none" type="date"/>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-outline uppercase tracking-wider px-1">Statut</label>
+<select class="bg-surface-container-high border-none text-on-surface rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/50 transition-all w-full md:w-56 text-sm">
+<option>Tous les statuts</option>
+<option>En attente</option>
+<option>Confirmée</option>
+<option>Complétée</option>
+<option>Annulée</option>
+</select>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="bg-primary hover:bg-primary-container text-on-primary font-bold px-6 py-3 rounded-lg flex items-center gap-2 transition-all active:scale-95 text-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+                    Nouvelle Réservation
+                </button>
+</div>
+</div>
+<!-- Reservations Table -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/10 shadow-2xl">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 border-b border-outline-variant/20">
+<th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline">Client</th>
+<th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline">Table</th>
+<th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline">Date &amp; Heure</th>
+<th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline text-center">Durée</th>
+<th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline text-center">Personnes</th>
+<th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline">Statut</th>
+<th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-highest/30 transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">KB</div>
+<span class="font-bold text-on-surface">Karim Benali</span>
+</div>
+</td>
+<td class="px-6 py-6 text-on-surface-variant font-medium">Table 2</td>
+<td class="px-6 py-6 text-on-surface-variant">15/04 14:00</td>
+<td class="px-6 py-6 text-center text-on-surface-variant">2h</td>
+<td class="px-6 py-6 text-center text-on-surface-variant">3</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">En attente</span>
+</td>
+<td class="px-6 py-6 text-right">
+<div class="flex justify-end gap-2">
+<button class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-emerald-500/20">Confirmer</button>
+<button class="bg-transparent hover:bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Annuler</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-highest/30 transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">SO</div>
+<span class="font-bold text-on-surface">Sara Ouali</span>
+</div>
+</td>
+<td class="px-6 py-6 text-on-surface-variant font-medium">Table 4</td>
+<td class="px-6 py-6 text-on-surface-variant">15/04 18:00</td>
+<td class="px-6 py-6 text-center text-on-surface-variant">3h</td>
+<td class="px-6 py-6 text-center text-on-surface-variant">5</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter bg-blue-500/10 text-blue-400 border border-blue-500/20">Confirmée</span>
+</td>
+<td class="px-6 py-6 text-right">
+<div class="flex justify-end gap-2">
+<button class="bg-transparent hover:bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Annuler</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-highest/30 transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">YA</div>
+<span class="font-bold text-on-surface">Youssef Ait</span>
+</div>
+</td>
+<td class="px-6 py-6 text-on-surface-variant font-medium">Table 1</td>
+<td class="px-6 py-6 text-on-surface-variant">15/04 10:00</td>
+<td class="px-6 py-6 text-center text-on-surface-variant">1h</td>
+<td class="px-6 py-6 text-center text-on-surface-variant">2</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">En attente</span>
+</td>
+<td class="px-6 py-6 text-right">
+<div class="flex justify-end gap-2">
+<button class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-emerald-500/20">Confirmer</button>
+<button class="bg-transparent hover:bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Annuler</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-highest/30 transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">NT</div>
+<span class="font-bold text-on-surface">Nadia Tazi</span>
+</div>
+</td>
+<td class="px-6 py-6 text-on-surface-variant font-medium">Table 3</td>
+<td class="px-6 py-6 text-on-surface-variant">14/04 16:00</td>
+<td class="px-6 py-6 text-center text-on-surface-variant">2h</td>
+<td class="px-6 py-6 text-center text-on-surface-variant">4</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter bg-zinc-500/10 text-zinc-400 border border-zinc-500/20">Complétée</span>
+</td>
+<td class="px-6 py-6 text-right">
+<span class="text-zinc-600 text-xs italic">—</span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-highest/30 transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">OR</div>
+<span class="font-bold text-on-surface">Omar Raji</span>
+</div>
+</td>
+<td class="px-6 py-6 text-on-surface-variant font-medium">Table 2</td>
+<td class="px-6 py-6 text-on-surface-variant">13/04 20:00</td>
+<td class="px-6 py-6 text-center text-on-surface-variant">4h</td>
+<td class="px-6 py-6 text-center text-on-surface-variant">6</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter bg-red-500/10 text-red-500 border border-red-500/20">Annulée</span>
+</td>
+<td class="px-6 py-6 text-right">
+<span class="text-zinc-600 text-xs italic">—</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination-style info -->
+<div class="px-6 py-4 bg-surface-container-high/30 border-t border-outline-variant/10 flex justify-between items-center">
+<p class="text-xs text-outline font-medium">Affichage de 5 réservations sur 42</p>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg bg-surface-container-highest text-zinc-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 rounded-lg bg-surface-container-highest text-zinc-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Statistics Bento Grid Section -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+<div class="bg-surface-container-high p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined !text-6xl">pending_actions</span>
+</div>
+<p class="text-outline text-xs font-bold uppercase tracking-widest mb-1">En attente</p>
+<h3 class="text-3xl font-black text-on-surface">12</h3>
+<p class="text-emerald-400 text-[10px] font-bold mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined !text-xs">trending_up</span> +3 depuis hier
+                </p>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined !text-6xl">check_circle</span>
+</div>
+<p class="text-outline text-xs font-bold uppercase tracking-widest mb-1">Confirmées</p>
+<h3 class="text-3xl font-black text-on-surface">28</h3>
+<p class="text-emerald-400 text-[10px] font-bold mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined !text-xs">trending_up</span> +8 cette semaine
+                </p>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined !text-6xl">table_bar</span>
+</div>
+<p class="text-outline text-xs font-bold uppercase tracking-widest mb-1">Taux d'occupation</p>
+<h3 class="text-3xl font-black text-on-surface">84%</h3>
+<div class="w-full bg-zinc-800 h-1 rounded-full mt-4 overflow-hidden">
+<div class="bg-primary h-full w-[84%]"></div>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-20 border-t border-outline-variant/10 py-12 px-8">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="text-xl font-bold text-yellow-500 opacity-50 uppercase tracking-widest font-['Epilogue']">
+                Aji L3bo Café
+            </div>
+<div class="flex gap-8 text-zinc-500 text-sm font-medium">
+<a class="hover:text-primary transition-colors" href="#">Support</a>
+<a class="hover:text-primary transition-colors" href="#">Documentation</a>
+<a class="hover:text-primary transition-colors" href="#">Confidentialité</a>
+</div>
+<p class="text-zinc-600 text-xs">© 2024 Aji L3bo Café Management. Tous droits réservés.</p>
+</div>
+</footer>
+</body></html>
