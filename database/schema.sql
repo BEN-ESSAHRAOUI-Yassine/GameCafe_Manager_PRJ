@@ -1,5 +1,6 @@
 -- Database name
-Aji_L3bo_Café.
+CREATE DATABASE IF NOT EXISTS Aji_L3bo_Cafe;
+USE Aji_L3bo_Cafe;
 
 
 -- Tabels
