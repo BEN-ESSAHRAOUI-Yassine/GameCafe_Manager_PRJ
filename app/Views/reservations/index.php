@@ -1,4 +1,4 @@
-<?php require __DIR__ . '/../layouts/header.php'; ?>
+
 
 <header class="bg-zinc-950/60 backdrop-blur-xl docked full-width top-0 z-50 shadow-[0_4px_40px_0_rgba(233,195,73,0.08)] flex justify-between items-center px-8 py-4 w-full sticky">
     <div class="flex items-center gap-8">
@@ -126,6 +126,37 @@
             <p class="text-xs text-outline font-medium">Affichage de <?= count($reservations) ?> réservations</p>
         </div>
     </div>
-</main>
 
-<?php require __DIR__ . '/../layouts/footer.php'; ?>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+        <div class="bg-surface-container-high p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
+            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <span class="material-symbols-outlined !text-6xl">pending_actions</span>
+            </div>
+            <p class="text-outline text-xs font-bold uppercase tracking-widest mb-1">En attente</p>
+            <h3 class="text-3xl font-black text-on-surface"><?= $pendingCount ?? 0 ?></h3>
+            <p class="text-emerald-400 text-[10px] font-bold mt-2 flex items-center gap-1">
+                <span class="material-symbols-outlined !text-xs">trending_up</span> +3 depuis hier
+            </p>
+        </div>
+        <div class="bg-surface-container-high p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
+            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <span class="material-symbols-outlined !text-6xl">check_circle</span>
+            </div>
+            <p class="text-outline text-xs font-bold uppercase tracking-widest mb-1">Confirmées</p>
+            <h3 class="text-3xl font-black text-on-surface"><?= $confirmedCount ?? 0 ?></h3>
+            <p class="text-emerald-400 text-[10px] font-bold mt-2 flex items-center gap-1">
+                <span class="material-symbols-outlined !text-xs">trending_up</span> +8 cette semaine
+            </p>
+        </div>
+        <div class="bg-surface-container-high p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
+            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <span class="material-symbols-outlined !text-6xl">table_bar</span>
+            </div>
+            <p class="text-outline text-xs font-bold uppercase tracking-widest mb-1">Taux d'occupation</p>
+            <h3 class="text-3xl font-black text-on-surface"><?= $occupancyRate ?? 0 ?>%</h3>
+            <div class="w-full bg-zinc-800 h-1 rounded-full mt-4 overflow-hidden">
+                <div class="bg-primary h-full" style="width: <?= $occupancyRate ?? 0 ?>%"></div>
+            </div>
+        </div>
+    </div>
+</main>

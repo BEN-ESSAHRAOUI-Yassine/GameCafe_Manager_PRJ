@@ -1,4 +1,4 @@
-<?php require __DIR__ . '/../layouts/header.php'; ?>
+
 
 <nav class="fixed top-0 w-full z-50 bg-[#1c1b1b]/60 backdrop-blur-xl shadow-[0_40px_40px_0_rgba(233,195,73,0.08)]">
     <div class="flex justify-between items-center px-10 py-4 max-w-[1920px] mx-auto">
@@ -92,5 +92,3 @@
         </form>
     </div>
 </main>
-
-<?php require __DIR__ . '/../layouts/footer.php'; ?>
