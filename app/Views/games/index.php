@@ -65,11 +65,11 @@
                     <div class="flex gap-6 mb-8 text-on-surface-variant/70 text-sm">
                         <div class="flex items-center gap-2">
                             <span class="material-symbols-outlined text-lg">groups</span>
-                            <?= $game['players_min'] ?>-<?= $game['players_max'] ?> joueurs
+                            <?= $game['min_players'] ?>-<?= $game['max_players'] ?> joueurs
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="material-symbols-outlined text-lg">schedule</span>
-                            <?= $game['duration'] ?> min
+                            <?= $game['duration_minutes'] ?> min
                         </div>
                     </div>
                     <a class="mt-auto flex items-center gap-2 text-[#d4af37] font-headline font-bold hover:gap-4 transition-all" href="/games/<?= $game['id'] ?>">

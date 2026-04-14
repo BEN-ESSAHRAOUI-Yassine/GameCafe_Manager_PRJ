@@ -58,14 +58,14 @@
                     <span class="text-zinc-500 text-[10px] uppercase font-bold tracking-[0.2em] block mb-3">Joueurs</span>
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary">group</span>
-                        <span class="font-headline font-bold text-lg text-on-surface"><?= $game['players_min'] ?> – <?= $game['players_max'] ?></span>
+                        <span class="font-headline font-bold text-lg text-on-surface"><?= $game['min_players'] ?> – <?= $game['max_players'] ?></span>
                     </div>
                 </div>
                 <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
                     <span class="text-zinc-500 text-[10px] uppercase font-bold tracking-[0.2em] block mb-3">Durée</span>
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary">schedule</span>
-                        <span class="font-headline font-bold text-lg text-on-surface"><?= $game['duration'] ?> min</span>
+                        <span class="font-headline font-bold text-lg text-on-surface"><?= $game['duration_minutes'] ?> min</span>
                     </div>
                 </div>
                 <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
