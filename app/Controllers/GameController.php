@@ -3,8 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\Game;
+use Core\Controller;
 
-class GameController {
+class GameController extends Controller {
 
     public function index(): void {
         $category = $_GET['category'] ?? null;
@@ -17,16 +18,15 @@ class GameController {
             $category = null;
         }
 
-        require __DIR__ . '/../Views/games/index.php';
+        $this->view('games/index', compact('games', 'category'));
     }
 
     public function show(int $id): void {
         $game = Game::find($id);
         if (!$game) {
-            http_response_code(404);
-            echo '<h1>Jeu introuvable</h1>';
+            $this->notFound();
             return;
         }
-        require __DIR__ . '/../Views/games/show.php';
+        $this->view('games/show', compact('game'));
     }
 }
