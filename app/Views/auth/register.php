@@ -20,7 +20,7 @@
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-            <form action="/register" method="POST" class="space-y-6">
+            <form action="<?= BASE_URL ?>/register" method="POST" class="space-y-6">
                 <div class="space-y-2">
                     <label class="block font-label text-xs uppercase tracking-widest text-on-surface-variant/70 ml-1">Nom complet</label>
                     <div class="relative">
@@ -67,7 +67,7 @@
             <div class="mt-10 text-center">
                 <p class="font-body text-sm text-on-surface-variant">
                     Déjà un compte ? 
-                    <a class="text-primary font-bold hover:text-surface-tint transition-colors ml-1" href="/login">Se connecter</a>
+                    <a class="text-primary font-bold hover:text-surface-tint transition-colors ml-1" href="<?= BASE_URL ?>/login">Se connecter</a>
                 </p>
             </div>
         </div>

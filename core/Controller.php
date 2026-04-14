@@ -64,13 +64,11 @@ class Controller
         exit;
     }
     
-    protected function isLoggedIn(): bool
-    {
+    public static function isLoggedIn(): bool {
         return isset($_SESSION['user_id']);
     }
-    
-    protected function isAdmin(): bool
-    {
+
+    public static function isAdmin(): bool {
         return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
     }
     

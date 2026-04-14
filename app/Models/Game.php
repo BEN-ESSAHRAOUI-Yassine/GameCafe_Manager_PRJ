@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Core\Database;
+use Core\Database;
 
 class Game {
     public static function all(): array {
