@@ -1,0 +1,12 @@
+{
+  "name": "aji-l3bo/cafe",
+  "description": "Système de gestion Aji L3bo Café",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/",
+      "App\\Core\\": "core/"
+    }
+  },
+  "require": {}
+}
