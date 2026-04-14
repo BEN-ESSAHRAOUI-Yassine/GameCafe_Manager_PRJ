@@ -1,22 +1,3 @@
-
-
-<nav class="fixed top-0 w-full z-50 bg-[#131313]/60 backdrop-blur-xl bg-gradient-to-b from-[#1c1b1b] to-transparent shadow-[0_40px_0_8%_rgba(233,195,73,0.08)] flex justify-between items-center px-8 h-20">
-    <div class="text-2xl font-bold tracking-tighter text-[#D4AF37] font-headline">Aji L3bo Café</div>
-    <div class="hidden md:flex items-center gap-8">
-        <a class="text-gray-400 font-medium font-headline hover:text-[#F2CA50] transition-colors duration-300" href="/games">Games</a>
-        <a class="text-[#D4AF37] border-b-2 border-[#D4AF37] pb-1 font-headline hover:text-[#F2CA50] transition-colors duration-300" href="/reservations">Reservations</a>
-        <a class="text-gray-400 font-medium font-headline hover:text-[#F2CA50] transition-colors duration-300" href="/sessions/dashboard">Dashboard</a>
-    </div>
-    <div class="flex items-center gap-6">
-        <button class="text-[#D4AF37] hover:text-[#F2CA50] transition-colors active:scale-95 transition-transform">
-            <span class="material-symbols-outlined">notifications</span>
-        </button>
-        <button class="text-[#D4AF37] hover:text-[#F2CA50] transition-colors active:scale-95 transition-transform">
-            <span class="material-symbols-outlined">account_circle</span>
-        </button>
-    </div>
-</nav>
-
 <main class="min-h-screen pt-32 pb-24 px-4 md:px-8 max-w-7xl mx-auto">
     <header class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div>
@@ -29,82 +10,48 @@
         </a>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
-            <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                <span class="material-symbols-outlined text-8xl">event_available</span>
-            </div>
-            <p class="text-on-surface-variant label-sm mb-1 uppercase tracking-widest font-semibold">Prochaine</p>
-            <p class="text-primary font-headline text-2xl font-bold"><?= htmlspecialchars($nextReservation['date'] ?? '—') ?></p>
-            <p class="text-on-surface opacity-60 text-sm mt-1">Table <?= htmlspecialchars($nextReservation['table'] ?? '—') ?> • <?= htmlspecialchars($nextReservation['time'] ?? '—') ?></p>
-        </div>
-        <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
-            <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                <span class="material-symbols-outlined text-8xl">history</span>
-            </div>
-            <p class="text-on-surface-variant label-sm mb-1 uppercase tracking-widest font-semibold">Total Sessions</p>
-            <p class="text-on-surface font-headline text-2xl font-bold"><?= $totalHours ?? 0 ?> Heures</p>
-            <p class="text-on-surface opacity-60 text-sm mt-1">Depuis votre inscription</p>
-        </div>
-        <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
-            <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                <span class="material-symbols-outlined text-8xl">stars</span>
-            </div>
-            <p class="text-on-surface-variant label-sm mb-1 uppercase tracking-widest font-semibold">Fidélité</p>
-            <p class="text-surface-tint font-headline text-2xl font-bold">Membre <?= htmlspecialchars($membershipLevel ?? 'Standard') ?></p>
-            <p class="text-on-surface opacity-60 text-sm mt-1">5% de réduction sur boissons</p>
-        </div>
-    </div>
-
+    <?php if (!empty($reservations)): ?>
     <div class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/10 shadow-2xl">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-surface-container-high text-on-surface-variant font-headline uppercase text-xs tracking-widest">
                         <th class="px-8 py-5 font-bold">Date</th>
-                        <th class="px-8 py-5 font-bold">Heure</th>
-                        <th class="px-8 py-5 font-bold">Durée</th>
                         <th class="px-8 py-5 font-bold">Table</th>
+                        <th class="px-8 py-5 font-bold">Durée</th>
                         <th class="px-8 py-5 font-bold">Personnes</th>
                         <th class="px-8 py-5 font-bold">Statut</th>
-                        <th class="px-8 py-5 font-bold"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/10">
                     <?php foreach ($reservations as $reservation): ?>
                         <tr class="hover:bg-surface-variant transition-colors group">
-                            <td class="px-8 py-6 font-semibold text-on-surface"><?= htmlspecialchars($reservation['date']) ?></td>
-                            <td class="px-8 py-6 font-medium text-on-surface-variant"><?= htmlspecialchars($reservation['time']) ?></td>
-                            <td class="px-8 py-6 font-medium text-on-surface-variant"><?= $reservation['duration'] ?>h</td>
-                            <td class="px-8 py-6">
-                                <span class="bg-surface-container-highest px-3 py-1 rounded text-sm font-medium border border-outline-variant/20">Table <?= htmlspecialchars($reservation['table']) ?></span>
+                            <td class="px-8 py-6 font-semibold text-on-surface">
+                                <?= htmlspecialchars(date('d/m/Y H:i', strtotime($reservation['reserved_at']))) ?>
                             </td>
-                            <td class="px-8 py-6 font-medium text-on-surface-variant"><?= $reservation['people_count'] ?> personnes</td>
                             <td class="px-8 py-6">
-                                <?php if ($reservation['status'] === 'pending'): ?>
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-400 border border-green-500/20">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
-                                        À venir
+                                <span class="bg-surface-container-highest px-3 py-1 rounded text-sm font-medium border border-outline-variant/20">Table <?= htmlspecialchars($reservation['table_name'] ?? $reservation['table_id']) ?></span>
+                            </td>
+                            <td class="px-8 py-6 font-medium text-on-surface-variant"><?= $reservation['duration_hours'] ?? $reservation['duration'] ?>h</td>
+                            <td class="px-8 py-6 font-medium text-on-surface-variant"><?= $reservation['party_size'] ?? $reservation['people_count'] ?> personnes</td>
+                            <td class="px-8 py-6">
+                                <?php if (($reservation['status'] ?? $reservation['reservation_status']) === 'pending'): ?>
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
+                                        En attente
                                     </span>
-                                <?php elseif ($reservation['status'] === 'confirmed'): ?>
+                                <?php elseif (($reservation['status'] ?? $reservation['reservation_status']) === 'confirmed'): ?>
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">
                                         Confirmée
                                     </span>
-                                <?php elseif ($reservation['status'] === 'completed'): ?>
+                                <?php elseif (($reservation['status'] ?? $reservation['reservation_status']) === 'completed'): ?>
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gray-500/10 text-gray-400 border border-gray-500/20">
                                         Complétée
                                     </span>
-                                <?php elseif ($reservation['status'] === 'cancelled'): ?>
+                                <?php elseif (($reservation['status'] ?? $reservation['reservation_status']) === 'cancelled'): ?>
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-error/10 text-error border border-error/20">
                                         Annulée
                                     </span>
                                 <?php endif; ?>
-                            </td>
-                            <td class="px-8 py-6 text-right">
-                                <a href="/reservations/<?= $reservation['id'] ?>" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-surface-container-highest text-on-surface-variant border border-outline-variant/20 hover:border-primary/30 hover:text-primary transition-all">
-                                    <span class="material-symbols-outlined text-sm">visibility</span>
-                                    
-                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -112,31 +59,11 @@
             </table>
         </div>
     </div>
-
-    <section class="mt-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div class="relative rounded-2xl overflow-hidden aspect-[4/3] md:aspect-square">
-            <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi3Xn2rq3100XlI8WUt7m9AtxPbyWFFFrXTOujKOsDtqwhW9vEX7KjSsGZJxytvZ0CvBkpByHyTQL2ROPMz7W2bQaMO_-u8k9p_Yo5n-Jx6NrnXH1GltahpD0Stp_2WZhVftBr_OWubtQU98lxX6FiHxGtR7fv-5qKOFy2RtSKm_vn1oolQqcoIWVi9o2kZpIiKycjy6UkMgIh9y-3Ox4Z777QuowvEzwqa-fTSCc2qO6FTOE4yyAYxa-IT9tPHJrkFoxuAVmpnPw" alt="Private table experience"/>
-            <div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent"></div>
-        </div>
-        <div class="space-y-6">
-            <h2 class="font-headline text-4xl font-bold tracking-tight text-[#D4AF37]">Privatisez votre table.</h2>
-            <p class="text-on-surface-variant text-lg leading-relaxed">
-                Vivez une expérience ludique hors du commun dans notre sanctuaire moderne. Que ce soit pour une compétition amicale ou une soirée détente, chaque table est préparée avec soin pour votre confort.
-            </p>
-            <ul class="space-y-4">
-                <li class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-primary">check_circle</span>
-                    <span class="text-on-surface font-medium">Accès illimité à notre ludothèque de 500+ jeux</span>
-                </li>
-                <li class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-primary">check_circle</span>
-                    <span class="text-on-surface font-medium">Service de boissons artisanales à table</span>
-                </li>
-                <li class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-primary">check_circle</span>
-                    <span class="text-on-surface font-medium">Conseils personnalisés de nos "Game Masters"</span>
-                </li>
-            </ul>
-        </div>
-    </section>
+    <?php else: ?>
+    <div class="text-center py-20">
+        <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4">event_busy</span>
+        <p class="text-on-surface-variant text-lg">Aucune réservation trouvée.</p>
+        <a href="/reservations/create" class="text-primary font-bold mt-4 inline-block">Créer une réservation</a>
+    </div>
+    <?php endif; ?>
 </main>

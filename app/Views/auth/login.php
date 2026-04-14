@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="/css/style.css">
-
 <main class="flex-grow flex items-center justify-center p-6 relative overflow-hidden">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
     <div class="w-full max-w-[440px] z-10">

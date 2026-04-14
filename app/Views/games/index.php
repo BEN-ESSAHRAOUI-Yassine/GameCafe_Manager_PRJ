@@ -1,21 +1,3 @@
-
-
-<header class="fixed top-0 w-full flex justify-between items-center px-8 py-4 bg-[#131313]/60 backdrop-blur-xl z-50">
-    <div class="text-2xl font-bold tracking-tighter text-[#d4af37] font-headline uppercase">
-        Aji L3bo Café
-    </div>
-    <nav class="hidden md:flex items-center gap-8">
-        <a class="font-headline uppercase tracking-tight text-[#d4af37] border-b-2 border-[#d4af37] pb-1" href="/games">Jeux</a>
-        <a class="font-headline uppercase tracking-tight text-gray-400 hover:text-[#d4af37] transition-colors" href="/reservations">Réservations</a>
-        <a class="font-headline uppercase tracking-tight text-gray-400 hover:text-[#d4af37] transition-colors" href="/sessions/dashboard">Dashboard</a>
-    </nav>
-    <div class="flex items-center gap-4">
-        <a href="/logout" class="font-headline uppercase tracking-tight text-gray-400 hover:text-[#f2ca50] transition-all duration-300 scale-95 active:opacity-80">
-            Se déconnecter
-        </a>
-    </div>
-</header>
-
 <main class="pt-32 pb-24 px-4 md:px-12 max-w-7xl mx-auto">
     <section class="mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
         <div class="space-y-4">
@@ -23,11 +5,11 @@
                 Catalogue des Jeux
             </h1>
             <div class="flex flex-wrap gap-2">
-                <button class="px-6 py-2 rounded-full bg-primary-container text-on-primary-container font-headline text-sm font-bold transition-all">Tous</button>
-                <button class="px-6 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-headline text-sm hover:bg-surface-variant transition-all">Stratégie</button>
-                <button class="px-6 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-headline text-sm hover:bg-surface-variant transition-all">Ambiance</button>
-                <button class="px-6 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-headline text-sm hover:bg-surface-variant transition-all">Famille</button>
-                <button class="px-6 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-headline text-sm hover:bg-surface-variant transition-all">Experts</button>
+                <a href="/games" class="px-6 py-2 rounded-full <?= $category === null ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Tous</a>
+                <a href="/games?category=Stratégie" class="px-6 py-2 rounded-full <?= $category === 'Stratégie' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Stratégie</a>
+                <a href="/games?category=Ambiance" class="px-6 py-2 rounded-full <?= $category === 'Ambiance' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Ambiance</a>
+                <a href="/games?category=Famille" class="px-6 py-2 rounded-full <?= $category === 'Famille' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Famille</a>
+                <a href="/games?category=Experts" class="px-6 py-2 rounded-full <?= $category === 'Experts' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Experts</a>
             </div>
         </div>
         <a href="/games/create" class="flex items-center gap-2 bg-[#2d5a27] hover:bg-[#387031] text-white px-8 py-4 rounded-xl font-headline font-bold transition-transform active:scale-95 self-start lg:self-end">
@@ -53,12 +35,12 @@
                         <?php if ($game['status'] === 'available'): ?>
                             <span class="text-green-500 font-bold text-sm flex items-center gap-1">
                                 <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                Disponible ✅
+                                Disponible
                             </span>
                         <?php else: ?>
                             <span class="text-error font-bold text-sm flex items-center gap-1">
                                 <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">error</span>
-                                En cours 🔴
+                                En cours
                             </span>
                         <?php endif; ?>
                     </div>
