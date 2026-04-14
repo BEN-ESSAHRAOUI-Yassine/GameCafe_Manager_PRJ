@@ -104,5 +104,18 @@
                             <span class="material-symbols-outlined text-3xl">table_restaurant</span>
                         </div>
                     </div>
-                    <div class="mb-10 flex items-center gap-2 text-on-surface-variant">
-                        <span class="material-sy
+                    <div class="mb-10 flex items-center gap-2 text-on-surface-variant/40">
+                        <span class="material-symbols-outlined text-4xl opacity-50">table_restaurant</span>
+                        <span class="text-sm font-medium">Table disponible — Prête pour une session</span>
+                    </div>
+                    <a href="/sessions/create" class="block w-full py-4 rounded-lg bg-primary/10 text-primary font-bold uppercase tracking-widest text-sm border border-primary/20 hover:bg-primary hover:text-white transition-all active:scale-95 text-center">
+                        Démarrer une session
+                    </a>
+                </div>
+            <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</main>
+
+<?php require __DIR__ . '/../layouts/footer.php'; ?>

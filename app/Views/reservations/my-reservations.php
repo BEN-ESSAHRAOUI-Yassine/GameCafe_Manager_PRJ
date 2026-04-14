@@ -36,7 +36,7 @@
             </div>
             <p class="text-on-surface-variant label-sm mb-1 uppercase tracking-widest font-semibold">Prochaine</p>
             <p class="text-primary font-headline text-2xl font-bold"><?= htmlspecialchars($nextReservation['date'] ?? '—') ?></p>
-            <p class="text-on-surface/60 text-sm mt-1">Table <?= htmlspecialchars($nextReservation['table'] ?? '—') ?> • <?= htmlspecialchars($nextReservation['time'] ?? '—') ?></p>
+            <p class="text-on-surface opacity-60 text-sm mt-1">Table <?= htmlspecialchars($nextReservation['table'] ?? '—') ?> • <?= htmlspecialchars($nextReservation['time'] ?? '—') ?></p>
         </div>
         <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
             <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
@@ -44,7 +44,7 @@
             </div>
             <p class="text-on-surface-variant label-sm mb-1 uppercase tracking-widest font-semibold">Total Sessions</p>
             <p class="text-on-surface font-headline text-2xl font-bold"><?= $totalHours ?? 0 ?> Heures</p>
-            <p class="text-on-surface/60 text-sm mt-1">Depuis votre inscription</p>
+            <p class="text-on-surface opacity-60 text-sm mt-1">Depuis votre inscription</p>
         </div>
         <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 relative overflow-hidden group">
             <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
@@ -52,7 +52,7 @@
             </div>
             <p class="text-on-surface-variant label-sm mb-1 uppercase tracking-widest font-semibold">Fidélité</p>
             <p class="text-surface-tint font-headline text-2xl font-bold">Membre <?= htmlspecialchars($membershipLevel ?? 'Standard') ?></p>
-            <p class="text-on-surface/60 text-sm mt-1">5% de réduction sur boissons</p>
+            <p class="text-on-surface opacity-60 text-sm mt-1">5% de réduction sur boissons</p>
         </div>
     </div>
 
@@ -101,4 +101,17 @@
                                 <?php endif; ?>
                             </td>
                             <td class="px-8 py-6 text-right">
-                                <button class="opacity-0 group-hover:opacity-100 te
+                                <a href="/reservations/<?= $reservation['id'] ?>" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-surface-container-highest text-on-surface-variant border border-outline-variant/20 hover:border-primary/30 hover:text-primary transition-all">
+                                    <span class="material-symbols-outlined text-sm">visibility</span>
+                                    
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<?php require __DIR__ . '/../layouts/footer.php'; ?>
