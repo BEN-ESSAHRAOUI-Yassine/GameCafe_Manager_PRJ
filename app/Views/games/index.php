@@ -1,4 +1,4 @@
-<?php require __DIR__ . '/../layouts/header.php'; ?>
+
 
 <header class="fixed top-0 w-full flex justify-between items-center px-8 py-4 bg-[#131313]/60 backdrop-blur-xl z-50">
     <div class="text-2xl font-bold tracking-tighter text-[#d4af37] font-headline uppercase">
@@ -80,5 +80,3 @@
         <?php endforeach; ?>
     </div>
 </main>
-
-<?php require __DIR__ . '/../layouts/footer.php'; ?>

@@ -1,4 +1,4 @@
-<?php require __DIR__ . '/../layouts/header.php'; ?>
+
 
 <header class="bg-zinc-900/60 backdrop-blur-xl flex justify-between items-center px-6 py-4 w-full sticky top-0 z-50 shadow-[0_40px_40px_rgba(233,195,73,0.08)]">
     <div class="flex items-center gap-8">
@@ -93,4 +93,21 @@
     </div>
 </main>
 
-<?php require __DIR__ . '/../layouts/footer.php'; ?>
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-zinc-900/60 backdrop-blur-xl rounded-t-3xl shadow-2xl">
+    <a class="flex flex-col items-center justify-center text-zinc-500 px-4 py-2 hover:bg-zinc-800/50 transition-all active:scale-90 duration-150" href="/games">
+        <span class="material-symbols-outlined">explore</span>
+        <span class="font-['Manrope'] text-[11px] font-medium uppercase tracking-widest mt-1">Discover</span>
+    </a>
+    <a class="flex flex-col items-center justify-center bg-yellow-500/10 text-yellow-500 rounded-xl px-4 py-2 hover:bg-zinc-800/50 transition-all active:scale-90 duration-150" href="/games">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">casino</span>
+        <span class="font-['Manrope'] text-[11px] font-medium uppercase tracking-widest mt-1">Library</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-zinc-500 px-4 py-2 hover:bg-zinc-800/50 transition-all active:scale-90 duration-150" href="/reservations">
+        <span class="material-symbols-outlined">calendar_today</span>
+        <span class="font-['Manrope'] text-[11px] font-medium uppercase tracking-widest mt-1">Bookings</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-zinc-500 px-4 py-2 hover:bg-zinc-800/50 transition-all active:scale-90 duration-150" href="/profile">
+        <span class="material-symbols-outlined">person</span>
+        <span class="font-['Manrope'] text-[11px] font-medium uppercase tracking-widest mt-1">Profile</span>
+    </a>
+</nav>

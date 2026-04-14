@@ -1,4 +1,4 @@
-<?php require __DIR__ . '/../layouts/header.php'; ?>
+
 
 <header class="fixed top-0 w-full z-50 bg-[#131313]/60 backdrop-blur-xl shadow-[0_40px_40px_-15px_rgba(233,195,73,0.08)] flex justify-between items-center px-8 h-16">
     <div class="text-xl font-bold text-[#d4af37] tracking-tighter font-headline">
@@ -117,5 +117,3 @@
         </div>
     </div>
 </main>
-
-<?php require __DIR__ . '/../layouts/footer.php'; ?>

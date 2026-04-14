@@ -1,4 +1,4 @@
-<?php require __DIR__ . '/../layouts/header.php'; ?>
+
 
 <nav class="fixed top-0 w-full z-50 bg-[#131313]/60 backdrop-blur-xl bg-gradient-to-b from-[#1c1b1b] to-transparent shadow-[0_40px_0_8%_rgba(233,195,73,0.08)] flex justify-between items-center px-8 h-20">
     <div class="text-2xl font-bold tracking-tighter text-[#D4AF37] font-headline">Aji L3bo Café</div>
@@ -112,6 +112,31 @@
             </table>
         </div>
     </div>
-</main>
 
-<?php require __DIR__ . '/../layouts/footer.php'; ?>
+    <section class="mt-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="relative rounded-2xl overflow-hidden aspect-[4/3] md:aspect-square">
+            <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi3Xn2rq3100XlI8WUt7m9AtxPbyWFFFrXTOujKOsDtqwhW9vEX7KjSsGZJxytvZ0CvBkpByHyTQL2ROPMz7W2bQaMO_-u8k9p_Yo5n-Jx6NrnXH1GltahpD0Stp_2WZhVftBr_OWubtQU98lxX6FiHxGtR7fv-5qKOFy2RtSKm_vn1oolQqcoIWVi9o2kZpIiKycjy6UkMgIh9y-3Ox4Z777QuowvEzwqa-fTSCc2qO6FTOE4yyAYxa-IT9tPHJrkFoxuAVmpnPw" alt="Private table experience"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent"></div>
+        </div>
+        <div class="space-y-6">
+            <h2 class="font-headline text-4xl font-bold tracking-tight text-[#D4AF37]">Privatisez votre table.</h2>
+            <p class="text-on-surface-variant text-lg leading-relaxed">
+                Vivez une expérience ludique hors du commun dans notre sanctuaire moderne. Que ce soit pour une compétition amicale ou une soirée détente, chaque table est préparée avec soin pour votre confort.
+            </p>
+            <ul class="space-y-4">
+                <li class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary">check_circle</span>
+                    <span class="text-on-surface font-medium">Accès illimité à notre ludothèque de 500+ jeux</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary">check_circle</span>
+                    <span class="text-on-surface font-medium">Service de boissons artisanales à table</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary">check_circle</span>
+                    <span class="text-on-surface font-medium">Conseils personnalisés de nos "Game Masters"</span>
+                </li>
+            </ul>
+        </div>
+    </section>
+</main>

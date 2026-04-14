@@ -1,4 +1,4 @@
-<?php require __DIR__ . '/../layouts/header.php'; ?>
+
 
 <nav class="fixed top-0 w-full z-50 glass-nav shadow-[0_40px_40px_rgba(233,195,73,0.08)]">
     <div class="flex justify-between items-center px-8 h-16 w-full">

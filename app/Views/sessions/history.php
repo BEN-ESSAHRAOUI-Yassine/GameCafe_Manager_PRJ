@@ -1,4 +1,4 @@
-<?php require __DIR__ . '/../layouts/header.php'; ?>
+
 
 <nav class="fixed top-0 w-full z-50 bg-[#131313]/60 backdrop-blur-xl bg-[#1c1b1b] border-none shadow-[0_40px_40px_rgba(233,195,73,0.08)]">
     <div class="flex justify-between items-center px-8 h-20 w-full max-w-[1920px] mx-auto">
@@ -113,4 +113,22 @@
             </table>
         </div>
         <div class="px-8 py-6 bg-surface-container-high/50 flex items-center justify-between border-t border-white/5">
-            <span class="text-sm text-out
+            <span class="text-sm text-outline">Affichage de <?= count($sessions) ?? 0 ?> sessions</span>
+            <div class="flex space-x-2">
+                <button class="p-2 rounded-lg bg-surface-container-highest text-on-surface hover:bg-primary/20 transition-all">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button class="px-4 py-2 rounded-lg bg-primary text-on-primary font-bold transition-all">1</button>
+                <button class="px-4 py-2 rounded-lg bg-surface-container-highest text-on-surface hover:bg-primary/20 transition-all">2</button>
+                <button class="px-4 py-2 rounded-lg bg-surface-container-highest text-on-surface hover:bg-primary/20 transition-all">3</button>
+                <button class="p-2 rounded-lg bg-surface-container-highest text-on-surface hover:bg-primary/20 transition-all">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-10 right-10 pointer-events-none opacity-20 hidden lg:block">
+        <span class="material-symbols-outlined text-[200px] text-primary select-none">playing_cards</span>
+    </div>
+</main>
