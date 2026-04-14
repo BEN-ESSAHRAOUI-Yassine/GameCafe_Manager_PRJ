@@ -30,7 +30,7 @@ class AuthController extends Controller {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['role']    = $user['role'];
                 $_SESSION['name']    = $user['name'];
-                $this->redirect($user['role'] === 'admin' ? '/sessions/dashboard' : '/games');
+                $this->redirect($user['role'] === 'admin' ? '/sessions/dashboard' : 'games/index');
             }
             $errors[] = 'Email ou mot de passe incorrect.';
         }
@@ -77,7 +77,7 @@ class AuthController extends Controller {
 
     public function home(): void {
     if (isset($_SESSION['user_id'])) {
-        $this->redirect('/games'); // or dashboard
+        $this->redirect('/games/index'); // or dashboard
     } else {
         $this->redirect('/login');
     }

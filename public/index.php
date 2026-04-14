@@ -19,7 +19,7 @@ $router->post('/register','AuthController@register');
 $router->post('/logout', 'AuthController@logout', ['AuthMiddleware']);
 
 // Games
-$router->get('/games',              'GameController@index');
+$router->get('/games/index', 'GameController@index', ['AuthMiddleware']);
 $router->get('/games/create',       'GameController@create');
 $router->post('/games',             'GameController@store');
 $router->get('/games/{id}',         'GameController@show');
