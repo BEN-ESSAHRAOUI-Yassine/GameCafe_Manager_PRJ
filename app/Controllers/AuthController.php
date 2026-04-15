@@ -76,12 +76,12 @@ class AuthController extends Controller {
     }
 
     public function home(): void {
-    if (isset($_SESSION['user_id'])) {
-        $this->redirect('/games/index'); // or dashboard
-    } else {
-        $this->redirect('/login');
+        if (isset($_SESSION['user_id'])) {
+            $this->redirect('/games/index'); // or dashboard
+        } else {
+            $this->redirect('/login');
+        }
     }
-}
     // POST /logout
     public function logout(): void {
         session_destroy();

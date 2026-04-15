@@ -1,11 +1,16 @@
-<main class="max-w-4xl mx-auto px-6 py-12 mb-24">
-    <a class="inline-flex items-center gap-2 text-primary hover:text-primary-fixed-dim transition-colors mb-12 group" href="/games">
+<main class="max-w-4xl mx-auto px-6 py-12 mb-24 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden opacity-20">
+        <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-[120px]"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]"></div>
+    </div>
+
+    <a class="inline-flex items-center gap-2 text-primary hover:text-primary-fixed-dim transition-colors mb-12 group relative z-10" href="/games">
         <span class="material-symbols-outlined transition-transform group-hover:-translate-x-1">arrow_back</span>
         <span class="font-semibold text-sm tracking-wide uppercase">Retour au catalogue</span>
     </a>
 
-    <div class="flex flex-col md:flex-row gap-12 items-start">
-        <div class="w-full md:w-5/12 aspect-[4/5] rounded-xl overflow-hidden shadow-2xl relative group">
+    <div class="flex flex-col md:flex-row gap-12 items-start relative z-10">
+        <div class="w-full md:w-5/12 aspect-[4/5] rounded-xl overflow-hidden shadow-2xl relative group border border-outline-variant/15">
             <div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-60 z-10"></div>
             <?php if (!empty($game['image'])): ?>
                 <img alt="<?= htmlspecialchars($game['name']) ?>" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="<?= htmlspecialchars($game['image']) ?>"/>
@@ -29,30 +34,30 @@
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
-                    <span class="text-zinc-500 text-[10px] uppercase font-bold tracking-[0.2em] block mb-3">Difficulté</span>
+                <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/15">
+                    <span class="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest block mb-3">Difficulté</span>
                     <div class="flex gap-1 text-primary">
                         <?php for ($i = 1; $i <= 5; $i++): ?>
                             <span class="material-symbols-outlined" <?= $i <= $game['difficulty'] ? 'style="font-variation-settings: \'FILL\' 1;"' : '' ?>>star</span>
                         <?php endfor; ?>
                     </div>
                 </div>
-                <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
-                    <span class="text-zinc-500 text-[10px] uppercase font-bold tracking-[0.2em] block mb-3">Joueurs</span>
+                <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/15">
+                    <span class="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest block mb-3">Joueurs</span>
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary">group</span>
                         <span class="font-headline font-bold text-lg text-on-surface"><?= $game['min_players'] ?> – <?= $game['max_players'] ?></span>
                     </div>
                 </div>
-                <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
-                    <span class="text-zinc-500 text-[10px] uppercase font-bold tracking-[0.2em] block mb-3">Durée</span>
+                <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/15">
+                    <span class="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest block mb-3">Durée</span>
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary">schedule</span>
                         <span class="font-headline font-bold text-lg text-on-surface"><?= $game['duration_minutes'] ?> min</span>
                     </div>
                 </div>
-                <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
-                    <span class="text-zinc-500 text-[10px] uppercase font-bold tracking-[0.2em] block mb-3">Catégorie</span>
+                <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/15">
+                    <span class="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest block mb-3">Catégorie</span>
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary">category</span>
                         <span class="font-headline font-bold text-lg text-on-surface"><?= htmlspecialchars($game['category']) ?></span>

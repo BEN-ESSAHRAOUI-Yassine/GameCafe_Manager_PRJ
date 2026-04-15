@@ -1,17 +1,27 @@
-<main class="min-h-screen pt-32 pb-24 px-4 md:px-8 max-w-7xl mx-auto">
-    <header class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-        <div>
-            <h1 class="font-headline text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface mb-2">Mes Réservations</h1>
-            <p class="text-on-surface-variant font-medium text-lg italic">Historique de vos réservations</p>
-        </div>
-        <a href="/reservations/create" class="inline-flex items-center gap-2 bg-primary text-on-primary-fixed px-6 py-3 rounded-xl font-bold hover:bg-primary-fixed transition-colors active:scale-95 transition-transform shadow-lg shadow-primary/10">
-            <span class="material-symbols-outlined">add_circle</span>
-            + Nouvelle Réservation
-        </a>
-    </header>
+<main class="min-h-screen pt-32 pb-24 px-4 md:px-8 max-w-7xl mx-auto relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden opacity-20">
+        <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-[120px]"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]"></div>
+    </div>
+    
+    <div class="relative z-10">
+        <header class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full bg-primary/10 border border-primary/20">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    <span class="text-xs tracking-widest uppercase text-primary">Réservations</span>
+                </div>
+                <h1 class="font-headline text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface mb-2">Mes Réservations</h1>
+                <p class="text-on-surface-variant font-medium text-lg">Historique de vos réservations</p>
+            </div>
+            <a href="/reservations/create" class="inline-flex items-center gap-2 btn-primary px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined">add_circle</span>
+                + Nouvelle Réservation
+            </a>
+        </header>
 
     <?php if (!empty($reservations)): ?>
-    <div class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/10 shadow-2xl">
+    <div class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/15">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -66,4 +76,5 @@
         <a href="/reservations/create" class="text-primary font-bold mt-4 inline-block">Créer une réservation</a>
     </div>
     <?php endif; ?>
+    </div>
 </main>
