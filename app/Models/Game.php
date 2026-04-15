@@ -24,4 +24,35 @@ class Game {
         $stmt->execute([$category]);
         return $stmt->fetchAll();
     }
+
+    public static function insert(array $data): bool {
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('
+            INSERT INTO games (name, category, description, difficulty, min_players, max_players, duration_minutes)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ');
+        return $stmt->execute([
+            $data['name'], $data['category'], $data['description'],
+            $data['difficulty'], $data['min_players'], $data['max_players'], $data['duration_minutes']
+        ]);
+    }
+
+    public static function update(int $id, array $data): bool {
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('
+            UPDATE games SET name=?, category=?, description=?, difficulty=?,
+            min_players=?, max_players=?, duration_minutes=? WHERE id=?
+        ');
+        return $stmt->execute([
+            $data['name'], $data['category'], $data['description'],
+            $data['difficulty'], $data['min_players'], $data['max_players'],
+            $data['duration_minutes'], $id
+        ]);
+    }
+
+    public static function delete(int $id): bool {
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('DELETE FROM games WHERE id = ?');
+        return $stmt->execute([$id]);
+    }
 }
