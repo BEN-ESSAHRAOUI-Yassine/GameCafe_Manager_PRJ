@@ -3,7 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\Reservation;
-class ReservationController
+use Core\Controller;
+class ReservationController extends Controller
 {
     private $reservationModel;
 
@@ -16,14 +17,13 @@ class ReservationController
     public function index()
     {
         $reservations = $this->reservationModel->getWithDetails();
-
-        require __DIR__ . '/../views/reservations/index.php';
+        $this->view('reservations/index');
     }
 
     // ✅ Show create form
     public function create()
     {
-        require __DIR__ . '/../views/reservations/create.php';
+        $this->view('reservations/create');
     }
 
     // ✅ Store new reservation (POST)
@@ -43,8 +43,7 @@ class ReservationController
             $this->reservationModel->create($data);
 
             // redirect
-            header('Location: /marrakech-food-lovers/public/reservations');
-            exit;
+            $this->redirect('reservations/index');
         }
     }
 
@@ -53,7 +52,7 @@ class ReservationController
     {
         $reservation = $this->reservationModel->getById($id);
 
-        require __DIR__ . '/../views/reservations/show.php';
+        $this->view('my-reservations');
     }
 
     // ✅ Update status (confirm / cancel)
@@ -66,8 +65,7 @@ class ReservationController
 
             $this->reservationModel->updateStatus($id, $status);
 
-            header('Location: /marrakech-food-lovers/public/reservations');
-            exit;
+            $this->redirect('reservations/index');
         }
     }
 
@@ -80,8 +78,7 @@ class ReservationController
 
             $this->reservationModel->delete($id);
 
-            header('Location: /marrakech-food-lovers/public/reservations');
-            exit;
+            $this->redirect('reservations/index');
         }
     }
 }
