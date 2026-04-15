@@ -81,4 +81,25 @@ class ReservationController extends Controller
             $this->redirect('reservations/index');
         }
     }
+
+    // Disponibilité Table
+    // GET /reservations/my
+    public function mine(): void {
+        $this->requireLogin();
+        $reservations = $this->reservationModel->findByUser($this->getUserId());
+        $this->view('reservations/my-reservations', ['reservations' => $reservations]);
+    }
+
+    // POST /reservations/available
+    public function available(): void {
+        $reservedAt    = $this->post('reserved_at', '');
+        $durationHours = (int) $this->post('duration_hours', 0);
+
+        if (!$reservedAt || !$durationHours) {
+            $this->json(['error' => 'Paramètres manquants'], 400);
+        }
+
+        $tables = Reservation::getAvailableTables($reservedAt, $durationHours);
+        $this->json($tables);
+    }
 }
