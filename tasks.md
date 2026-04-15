@@ -1,5 +1,5 @@
 # 🗂️ Task Breakdown — Aji L3bo Café
-> **Ilyas (Dev A) · Abdelatif (Dev B) · Yassin (Dev C)**  
+> **Ilyas (Dev A) · Abdelatif (Dev B) · Yassin (Dev C)**
 > 5 jours · Lundi 13/04 → Vendredi 17/04/2026
 
 ---
@@ -28,7 +28,7 @@
 | T-09 | **Yassin** | Model Session + SessionController (dashboard + start) | Phase 2 | T-05, T-06 |
 | T-10 | **Ilyas** | Filtre catégories + validation formulaire jeux | Phase 3 | T-07 |
 | T-11 | **Abdelatif** | Admin réservations (liste + confirmer/annuler) | Phase 3 | T-08 |
-| T-12 | **Yassin** | SessionController (end session + historique) + Auth Guard | Phase 3 | T-09 |
+| T-12 | **Yassin** | SessionController (end session + historique) + nettoyage Guard | Phase 3 | T-09 |
 
 ---
 
@@ -39,6 +39,8 @@
 ### T-01 · Ilyas — Générer toutes les vues statiques HTML
 
 **Objectif :** Produire tous les fichiers de vue en HTML statique (sans PHP, sans données dynamiques). Ces fichiers seront ensuite branchés aux controllers par chacun.
+
+> ⚠️ **Important :** La classe `Controller` inclut automatiquement `header.php` et `footer.php` autour de chaque vue via `$this->view()`. Les vues **ne doivent pas** faire de `require` vers les layouts elles-mêmes — elles contiennent uniquement le contenu de la page (entre le `<body>` et avant le footer).
 
 **Fichiers à créer dans `app/Views/` :**
 
@@ -177,7 +179,7 @@ Insérer exactement :
 ```php
 <?php
 
-namespace App\Core;
+namespace Core;
 
 use PDO;
 use PDOException;
@@ -187,10 +189,10 @@ class Database {
 
     public static function connect(): PDO {
         if (self::$instance === null) {
-            $host = 'localhost';
-            $db   = 'aji_l3bo';
-            $user = 'root';
-            $pass = '';
+            $host    = 'localhost';
+            $db      = 'aji_l3bo';
+            $user    = 'root';
+            $pass    = '';
             $charset = 'utf8mb4';
 
             $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
@@ -227,6 +229,7 @@ class Database {
 mkdir -p app/Controllers app/Models app/Views/auth app/Views/games \
          app/Views/reservations app/Views/sessions app/Views/layouts \
          core public database
+
 touch public/index.php public/.htaccess
 touch core/Router.php core/Database.php core/Controller.php
 touch app/Controllers/GameController.php
@@ -242,6 +245,8 @@ touch composer.json .gitignore README.md
 
 **Étape 2 — `composer.json`**
 
+> ⚠️ Le namespace de `core/` est `Core\` (pas `App\Core\`). Respecter ce mapping exact.
+
 ```json
 {
   "name": "aji-l3bo/cafe",
@@ -250,7 +255,7 @@ touch composer.json .gitignore README.md
   "autoload": {
     "psr-4": {
       "App\\": "app/",
-      "App\\Core\\": "core/"
+      "Core\\": "core/"
     }
   },
   "require": {}
@@ -272,17 +277,146 @@ RewriteRule ^(.*)$ index.php [QSA,L]
 
 ---
 
-**Étape 4 — `core/Router.php`**
+**Étape 4 — `core/Controller.php`**
 
-Implémenter la classe Router avec :
-- `get(string $uri, string $action): void` — enregistre une route GET
-- `post(string $uri, string $action): void` — enregistre une route POST
-- `dispatch(): void` — lit `$_SERVER['REQUEST_URI']` et `$_SERVER['REQUEST_METHOD']`, trouve la route correspondante, extrait les paramètres dynamiques (`{id}`), instancie le controller et appelle la méthode
+Copier exactement le fichier fourni :
 
 ```php
 <?php
 
-namespace App\Core;
+namespace Core;
+
+class Controller
+{
+    protected function view(string $view, array $data = []): void
+    {
+        extract($data);
+
+        $viewFile = dirname(__DIR__) . '/app/Views/' . $view . '.php';
+
+        if (!file_exists($viewFile)) {
+            $this->notFound();
+            return;
+        }
+
+        require dirname(__DIR__) . '/app/Views/layouts/header.php';
+        require $viewFile;
+        require dirname(__DIR__) . '/app/Views/layouts/footer.php';
+    }
+
+    protected function redirect(string $url): void
+    {
+        header('Location: ' . $url);
+        exit;
+    }
+
+    protected function json(array $data, int $statusCode = 200): void
+    {
+        http_response_code($statusCode);
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit;
+    }
+
+    protected function notFound(): void
+    {
+        http_response_code(404);
+        echo '<!DOCTYPE html>
+        <html>
+        <head><title>404 - Page Not Found</title></head>
+        <body>
+            <h1>404 - Page Not Found</h1>
+            <p>The page you are looking for does not exist.</p>
+            <a href="/games">Go to Home</a>
+        </body>
+        </html>';
+        exit;
+    }
+
+    protected function unauthorized(): void
+    {
+        http_response_code(403);
+        echo '<!DOCTYPE html>
+        <html>
+        <head><title>403 - Unauthorized</title></head>
+        <body>
+            <h1>403 - Unauthorized</h1>
+            <p>You do not have permission to access this page.</p>
+            <a href="/games">Go to Home</a>
+        </body>
+        </html>';
+        exit;
+    }
+
+    protected function isLoggedIn(): bool
+    {
+        return isset($_SESSION['user_id']);
+    }
+
+    protected function isAdmin(): bool
+    {
+        return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+    }
+
+    protected function requireLogin(): void
+    {
+        if (!$this->isLoggedIn()) {
+            $this->redirect('/login');
+        }
+    }
+
+    protected function requireAdmin(): void
+    {
+        if (!$this->isAdmin()) {
+            $this->unauthorized();
+        }
+    }
+
+    protected function getUserId(): ?int
+    {
+        return $_SESSION['user_id'] ?? null;
+    }
+
+    protected function getUserRole(): ?string
+    {
+        return $_SESSION['role'] ?? null;
+    }
+
+    protected function old(string $key): string
+    {
+        return $_SESSION['old'][$key] ?? '';
+    }
+
+    protected function clearOld(): void
+    {
+        unset($_SESSION['old']);
+    }
+
+    protected function with(string $key, $value): void
+    {
+        $_SESSION[$key] = $value;
+    }
+
+    protected function get(string $key, $default = null)
+    {
+        return $_GET[$key] ?? $default;
+    }
+
+    protected function post(string $key, $default = null)
+    {
+        return $_POST[$key] ?? $default;
+    }
+}
+```
+
+---
+
+**Étape 5 — `core/Router.php`**
+
+```php
+<?php
+
+namespace Core;
 
 class Router {
     private array $routes = [];
@@ -300,14 +434,13 @@ class Router {
         $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         foreach ($this->routes[$method] ?? [] as $route => $action) {
-            // Convertir {id} en regex (\d+)
             $pattern = preg_replace('/\{[a-z]+\}/', '(\d+)', $route);
             $pattern = '#^' . $pattern . '$#';
 
             if (preg_match($pattern, $uri, $matches)) {
-                array_shift($matches); // retirer le full match
+                array_shift($matches);
                 [$controllerName, $methodName] = explode('@', $action);
-                $class = "App\\Controllers\\$controllerName";
+                $class      = "App\\Controllers\\$controllerName";
                 $controller = new $class();
                 $controller->$methodName(...$matches);
                 return;
@@ -322,14 +455,14 @@ class Router {
 
 ---
 
-**Étape 5 — `public/index.php`**
+**Étape 6 — `public/index.php`**
 
 ```php
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Core\Router;
+use Core\Router;
 
 session_start();
 
@@ -356,21 +489,22 @@ $router->get('/reservations',              'ReservationController@index');
 $router->get('/reservations/create',       'ReservationController@create');
 $router->post('/reservations',             'ReservationController@store');
 $router->get('/reservations/my',           'ReservationController@mine');
+$router->post('/reservations/available',   'ReservationController@available');
 $router->post('/reservations/{id}/status', 'ReservationController@updateStatus');
 
 // Sessions
-$router->get('/sessions/dashboard',  'SessionController@dashboard');
-$router->get('/sessions/create',     'SessionController@create');
-$router->post('/sessions',           'SessionController@store');
-$router->post('/sessions/{id}/end',  'SessionController@end');
-$router->get('/sessions/history',    'SessionController@history');
+$router->get('/sessions/dashboard', 'SessionController@dashboard');
+$router->get('/sessions/create',    'SessionController@create');
+$router->post('/sessions',          'SessionController@store');
+$router->post('/sessions/{id}/end', 'SessionController@end');
+$router->get('/sessions/history',   'SessionController@history');
 
 $router->dispatch();
 ```
 
 ---
 
-**Étape 6 — `.gitignore`**
+**Étape 7 — `.gitignore`**
 
 ```
 /vendor/
@@ -380,7 +514,7 @@ $router->dispatch();
 
 ---
 
-**Étape 7 — Jira Board**
+**Étape 8 — Jira Board**
 
 Créer le board et ajouter **les 12 tickets** (T-01 à T-12) avec :
 - **Title** : l'intitulé exact du tableau ci-dessus
@@ -391,7 +525,7 @@ Créer le board et ajouter **les 12 tickets** (T-01 à T-12) avec :
 
 Livrer le board avant **lundi 16:00**.
 
-**Livrable :** Arborescence créée, `composer.json` fonctionnel, `Router.php` opérationnel, `index.php` avec toutes les routes, Jira board avec 12 tickets.
+**Livrable :** Arborescence créée · `composer.json` avec mapping `Core\\` fonctionnel · `core/Controller.php` en place · `Router.php` opérationnel · `index.php` avec toutes les routes · Jira board avec 12 tickets.
 
 ---
 
@@ -413,26 +547,34 @@ Livrer le board avant **lundi 16:00**.
 
 namespace App\Models;
 
-use App\Core\Database;
+use Core\Database;
 
 class Game {
+
     public static function all(): array {
-        $pdo = Database::connect();
+        $pdo  = Database::connect();
         $stmt = $pdo->query('SELECT * FROM games ORDER BY name ASC');
         return $stmt->fetchAll();
     }
 
     public static function find(int $id): array|false {
-        $pdo = Database::connect();
+        $pdo  = Database::connect();
         $stmt = $pdo->prepare('SELECT * FROM games WHERE id = ?');
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
 
     public static function allByCategory(string $category): array {
-        $pdo = Database::connect();
+        $pdo  = Database::connect();
         $stmt = $pdo->prepare('SELECT * FROM games WHERE category = ? ORDER BY name ASC');
         $stmt->execute([$category]);
+        return $stmt->fetchAll();
+    }
+
+    public static function allByStatus(string $status): array {
+        $pdo  = Database::connect();
+        $stmt = $pdo->prepare('SELECT * FROM games WHERE status = ?');
+        $stmt->execute([$status]);
         return $stmt->fetchAll();
     }
 }
@@ -442,41 +584,36 @@ class Game {
 
 **Fichier : `app/Controllers/GameController.php`**
 
-Implémenter les méthodes `index()` et `show(int $id)` :
-
 ```php
 <?php
 
 namespace App\Controllers;
 
+use Core\Controller;
 use App\Models\Game;
 
-class GameController {
+class GameController extends Controller {
 
     // GET /games
     public function index(): void {
         $games = Game::all();
-        require __DIR__ . '/../Views/games/index.php';
+        $this->view('games/index', ['games' => $games]);
     }
 
     // GET /games/{id}
     public function show(int $id): void {
         $game = Game::find($id);
         if (!$game) {
-            http_response_code(404);
-            echo '<h1>Jeu introuvable</h1>';
-            return;
+            $this->notFound();
         }
-        require __DIR__ . '/../Views/games/show.php';
+        $this->view('games/show', ['game' => $game]);
     }
 }
 ```
 
 ---
 
-**Mettre à jour `app/Views/games/index.php`**
-
-Remplacer les données hardcodées par une boucle PHP :
+**Mettre à jour `app/Views/games/index.php`** — remplacer les données hardcodées :
 
 ```php
 <?php foreach ($games as $game): ?>
@@ -510,12 +647,12 @@ Remplacer les données hardcodées par une boucle PHP :
 
 namespace App\Models;
 
-use App\Core\Database;
+use Core\Database;
 
 class Reservation {
 
     public static function create(array $data): bool {
-        $pdo = Database::connect();
+        $pdo  = Database::connect();
         $stmt = $pdo->prepare('
             INSERT INTO reservations (user_id, table_id, party_size, reserved_at, duration_hours, status)
             VALUES (?, ?, ?, ?, ?, "pending")
@@ -530,7 +667,7 @@ class Reservation {
     }
 
     public static function findByUser(int $userId): array {
-        $pdo = Database::connect();
+        $pdo  = Database::connect();
         $stmt = $pdo->prepare('
             SELECT r.*, t.name AS table_name
             FROM reservations r
@@ -548,64 +685,55 @@ class Reservation {
 
 **Fichier : `app/Controllers/ReservationController.php`**
 
-Implémenter `create()` et `store()` :
-
 ```php
 <?php
 
 namespace App\Controllers;
 
+use Core\Controller;
 use App\Models\Reservation;
 
-class ReservationController {
+class ReservationController extends Controller {
 
     // GET /reservations/create
     public function create(): void {
-        // Vérifier que l'utilisateur est connecté
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
-            exit;
-        }
-        require __DIR__ . '/../Views/reservations/create.php';
+        $this->requireLogin();
+        $this->view('reservations/create');
     }
 
     // POST /reservations
     public function store(): void {
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
-            exit;
-        }
+        $this->requireLogin();
 
-        // Validation
         $errors = [];
-        if (empty($_POST['party_size']) || $_POST['party_size'] < 1) {
+        $partySize     = (int) $this->post('party_size', 0);
+        $reservedAt    = $this->post('reserved_at', '');
+        $durationHours = (int) $this->post('duration_hours', 0);
+        $tableId       = (int) $this->post('table_id', 0);
+
+        if ($partySize < 1)
             $errors[] = 'Nombre de personnes invalide.';
-        }
-        if (empty($_POST['reserved_at'])) {
+        if (empty($reservedAt))
             $errors[] = 'Date et heure obligatoires.';
-        }
-        if (empty($_POST['duration_hours']) || !in_array($_POST['duration_hours'], [1, 2, 3, 4])) {
+        if (!in_array($durationHours, [1, 2, 3, 4]))
             $errors[] = 'Durée invalide.';
-        }
-        if (empty($_POST['table_id'])) {
+        if (!$tableId)
             $errors[] = 'Veuillez sélectionner une table.';
-        }
 
         if (!empty($errors)) {
-            require __DIR__ . '/../Views/reservations/create.php';
+            $this->view('reservations/create', ['errors' => $errors]);
             return;
         }
 
         Reservation::create([
-            'user_id'       => $_SESSION['user_id'],
-            'table_id'      => (int) $_POST['table_id'],
-            'party_size'    => (int) $_POST['party_size'],
-            'reserved_at'   => $_POST['reserved_at'],
-            'duration_hours'=> (int) $_POST['duration_hours'],
+            'user_id'        => $this->getUserId(),
+            'table_id'       => $tableId,
+            'party_size'     => $partySize,
+            'reserved_at'    => $reservedAt,
+            'duration_hours' => $durationHours,
         ]);
 
-        header('Location: /reservations/my');
-        exit;
+        $this->redirect('/reservations/my');
     }
 }
 ```
@@ -627,19 +755,26 @@ class ReservationController {
 
 namespace App\Models;
 
-use App\Core\Database;
+use Core\Database;
 
 class User {
 
     public static function findByEmail(string $email): array|false {
-        $pdo = Database::connect();
+        $pdo  = Database::connect();
         $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ?');
         $stmt->execute([$email]);
         return $stmt->fetch();
     }
 
+    public static function find(int $id): array|false {
+        $pdo  = Database::connect();
+        $stmt = $pdo->prepare('SELECT * FROM users WHERE id = ?');
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
     public static function create(array $data): bool {
-        $pdo = Database::connect();
+        $pdo  = Database::connect();
         $stmt = $pdo->prepare('
             INSERT INTO users (name, email, phone, password, role)
             VALUES (?, ?, ?, ?, "client")
@@ -650,13 +785,6 @@ class User {
             $data['phone'],
             password_hash($data['password'], PASSWORD_BCRYPT),
         ]);
-    }
-
-    public static function find(int $id): array|false {
-        $pdo = Database::connect();
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE id = ?');
-        $stmt->execute([$id]);
-        return $stmt->fetch();
     }
 }
 ```
@@ -670,19 +798,20 @@ class User {
 
 namespace App\Controllers;
 
+use Core\Controller;
 use App\Models\User;
 
-class AuthController {
+class AuthController extends Controller {
 
     // GET /login
     public function loginForm(): void {
-        require __DIR__ . '/../Views/auth/login.php';
+        $this->view('auth/login');
     }
 
     // POST /login
     public function login(): void {
-        $email    = trim($_POST['email'] ?? '');
-        $password = $_POST['password'] ?? '';
+        $email    = trim($this->post('email', ''));
+        $password = $this->post('password', '');
         $errors   = [];
 
         if (empty($email) || empty($password)) {
@@ -695,63 +824,51 @@ class AuthController {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['role']    = $user['role'];
                 $_SESSION['name']    = $user['name'];
-
-                // Redirection selon le rôle
-                header($user['role'] === 'admin'
-                    ? 'Location: /sessions/dashboard'
-                    : 'Location: /games');
-                exit;
+                $this->redirect($user['role'] === 'admin' ? '/sessions/dashboard' : '/games');
             }
             $errors[] = 'Email ou mot de passe incorrect.';
         }
 
-        require __DIR__ . '/../Views/auth/login.php';
+        $this->view('auth/login', ['errors' => $errors]);
     }
 
     // GET /register
     public function registerForm(): void {
-        require __DIR__ . '/../Views/auth/register.php';
+        $this->view('auth/register');
     }
 
     // POST /register
     public function register(): void {
         $errors = [];
+        $name     = trim($this->post('name', ''));
+        $email    = trim($this->post('email', ''));
+        $phone    = trim($this->post('phone', ''));
+        $password = $this->post('password', '');
+        $confirm  = $this->post('confirm_password', '');
 
-        if (empty($_POST['name']))     $errors[] = 'Nom obligatoire.';
-        if (empty($_POST['email']))    $errors[] = 'Email obligatoire.';
-        if (empty($_POST['password'])) $errors[] = 'Mot de passe obligatoire.';
-        if ($_POST['password'] !== $_POST['confirm_password']) {
+        if (empty($name))     $errors[] = 'Nom obligatoire.';
+        if (empty($email))    $errors[] = 'Email obligatoire.';
+        if (empty($password)) $errors[] = 'Mot de passe obligatoire.';
+        if ($password !== $confirm)
             $errors[] = 'Les mots de passe ne correspondent pas.';
-        }
-        if (strlen($_POST['password'] ?? '') < 8) {
+        if (strlen($password) < 8)
             $errors[] = 'Mot de passe minimum 8 caractères.';
-        }
-
-        if (User::findByEmail($_POST['email'] ?? '')) {
+        if (User::findByEmail($email))
             $errors[] = 'Cet email est déjà utilisé.';
-        }
 
         if (!empty($errors)) {
-            require __DIR__ . '/../Views/auth/register.php';
+            $this->view('auth/register', ['errors' => $errors]);
             return;
         }
 
-        User::create([
-            'name'     => trim($_POST['name']),
-            'email'    => trim($_POST['email']),
-            'phone'    => trim($_POST['phone'] ?? ''),
-            'password' => $_POST['password'],
-        ]);
-
-        header('Location: /login');
-        exit;
+        User::create(['name' => $name, 'email' => $email, 'phone' => $phone, 'password' => $password]);
+        $this->redirect('/login');
     }
 
     // POST /logout
     public function logout(): void {
         session_destroy();
-        header('Location: /login');
-        exit;
+        $this->redirect('/login');
     }
 }
 ```
@@ -778,7 +895,7 @@ class AuthController {
 
 ```php
 public static function insert(array $data): bool {
-    $pdo = Database::connect();
+    $pdo  = Database::connect();
     $stmt = $pdo->prepare('
         INSERT INTO games (name, category, description, difficulty, min_players, max_players, duration_minutes)
         VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -790,7 +907,7 @@ public static function insert(array $data): bool {
 }
 
 public static function update(int $id, array $data): bool {
-    $pdo = Database::connect();
+    $pdo  = Database::connect();
     $stmt = $pdo->prepare('
         UPDATE games SET name=?, category=?, description=?, difficulty=?,
         min_players=?, max_players=?, duration_minutes=? WHERE id=?
@@ -803,7 +920,7 @@ public static function update(int $id, array $data): bool {
 }
 
 public static function delete(int $id): bool {
-    $pdo = Database::connect();
+    $pdo  = Database::connect();
     $stmt = $pdo->prepare('DELETE FROM games WHERE id = ?');
     return $stmt->execute([$id]);
 }
@@ -813,24 +930,109 @@ public static function delete(int $id): bool {
 
 **Ajouter à `app/Controllers/GameController.php` :**
 
-- `create()` → vérifier `$_SESSION['role'] === 'admin'`, puis afficher `Views/games/create.php`
-- `store()` → valider les champs (name, category, difficulty 1–5, min/max players > 0), appeler `Game::insert()`, rediriger vers `/games`
-- `edit(int $id)` → récupérer `Game::find($id)`, passer à `Views/games/edit.php`
-- `update(int $id)` → mêmes validations que `store()`, appeler `Game::update($id, ...)`, rediriger vers `/games/{id}`
-- `destroy(int $id)` → vérifier admin, appeler `Game::delete($id)`, rediriger vers `/games`
-
-**Ajouter dans chaque méthode admin :**
 ```php
-if ($_SESSION['role'] !== 'admin') {
-    http_response_code(403);
-    echo '<h1>Accès interdit</h1>';
-    return;
+// GET /games/create
+public function create(): void {
+    $this->requireAdmin();
+    $this->view('games/create');
+}
+
+// POST /games
+public function store(): void {
+    $this->requireAdmin();
+
+    $errors = [];
+    $name     = trim($this->post('name', ''));
+    $category = $this->post('category', '');
+    $difficulty = (int) $this->post('difficulty', 0);
+    $minPlayers = (int) $this->post('min_players', 0);
+    $maxPlayers = (int) $this->post('max_players', 0);
+
+    if (empty($name))
+        $errors[] = 'Nom obligatoire.';
+    if (!in_array($category, ['Stratégie', 'Ambiance', 'Famille', 'Experts']))
+        $errors[] = 'Catégorie invalide.';
+    if ($difficulty < 1 || $difficulty > 5)
+        $errors[] = 'Difficulté doit être entre 1 et 5.';
+    if ($minPlayers < 1 || $maxPlayers < $minPlayers)
+        $errors[] = 'Nombre de joueurs invalide.';
+
+    if (!empty($errors)) {
+        $this->view('games/create', ['errors' => $errors]);
+        return;
+    }
+
+    Game::insert([
+        'name'             => $name,
+        'category'         => $category,
+        'description'      => $this->post('description', ''),
+        'difficulty'       => $difficulty,
+        'min_players'      => $minPlayers,
+        'max_players'      => $maxPlayers,
+        'duration_minutes' => (int) $this->post('duration_minutes', 0),
+    ]);
+
+    $this->redirect('/games');
+}
+
+// GET /games/{id}/edit
+public function edit(int $id): void {
+    $this->requireAdmin();
+    $game = Game::find($id);
+    if (!$game) $this->notFound();
+    $this->view('games/edit', ['game' => $game]);
+}
+
+// POST /games/{id}/update
+public function update(int $id): void {
+    $this->requireAdmin();
+
+    $errors = [];
+    $name     = trim($this->post('name', ''));
+    $category = $this->post('category', '');
+    $difficulty = (int) $this->post('difficulty', 0);
+    $minPlayers = (int) $this->post('min_players', 0);
+    $maxPlayers = (int) $this->post('max_players', 0);
+
+    if (empty($name))
+        $errors[] = 'Nom obligatoire.';
+    if (!in_array($category, ['Stratégie', 'Ambiance', 'Famille', 'Experts']))
+        $errors[] = 'Catégorie invalide.';
+    if ($difficulty < 1 || $difficulty > 5)
+        $errors[] = 'Difficulté doit être entre 1 et 5.';
+    if ($minPlayers < 1 || $maxPlayers < $minPlayers)
+        $errors[] = 'Nombre de joueurs invalide.';
+
+    if (!empty($errors)) {
+        $game = Game::find($id);
+        $this->view('games/edit', ['game' => $game, 'errors' => $errors]);
+        return;
+    }
+
+    Game::update($id, [
+        'name'             => $name,
+        'category'         => $category,
+        'description'      => $this->post('description', ''),
+        'difficulty'       => $difficulty,
+        'min_players'      => $minPlayers,
+        'max_players'      => $maxPlayers,
+        'duration_minutes' => (int) $this->post('duration_minutes', 0),
+    ]);
+
+    $this->redirect('/games/' . $id);
+}
+
+// POST /games/{id}/delete
+public function destroy(int $id): void {
+    $this->requireAdmin();
+    Game::delete($id);
+    $this->redirect('/games');
 }
 ```
 
-**Mettre à jour les vues** `games/create.php` et `games/edit.php` pour afficher `$errors` et pré-remplir les champs dans `edit.php` avec `$game['...']`.
+**Mettre à jour les vues** `games/create.php` et `games/edit.php` pour afficher `$errors` si défini et pré-remplir les champs dans `edit.php` avec `$game['...']`.
 
-**Livrable :** Admin peut créer/modifier/supprimer un jeu · accès refusé (403) si non-admin · validation serveur fonctionnelle.
+**Livrable :** Admin peut créer/modifier/supprimer un jeu · `$this->unauthorized()` si non-admin · validation serveur fonctionnelle.
 
 ---
 
@@ -845,10 +1047,8 @@ if ($_SESSION['role'] !== 'admin') {
 **Ajouter à `app/Models/Reservation.php` :**
 
 ```php
-// Retourne les tables qui n'ont AUCUNE réservation (pending ou confirmed)
-// qui chevauche le créneau [reserved_at, reserved_at + duration_hours]
 public static function getAvailableTables(string $reservedAt, int $durationHours): array {
-    $pdo = Database::connect();
+    $pdo  = Database::connect();
     $stmt = $pdo->prepare('
         SELECT t.*
         FROM tables t
@@ -867,47 +1067,65 @@ public static function getAvailableTables(string $reservedAt, int $durationHours
 
 ---
 
-**Ajouter dans `app/Controllers/ReservationController.php` :**
+**Ajouter à `app/Controllers/ReservationController.php` :**
 
 ```php
 // GET /reservations/my
 public function mine(): void {
-    if (!isset($_SESSION['user_id'])) {
-        header('Location: /login');
-        exit;
+    $this->requireLogin();
+    $reservations = Reservation::findByUser($this->getUserId());
+    $this->view('reservations/my-reservations', ['reservations' => $reservations]);
+}
+
+// POST /reservations/available
+public function available(): void {
+    $reservedAt    = $this->post('reserved_at', '');
+    $durationHours = (int) $this->post('duration_hours', 0);
+
+    if (!$reservedAt || !$durationHours) {
+        $this->json(['error' => 'Paramètres manquants'], 400);
     }
-    $reservations = Reservation::findByUser($_SESSION['user_id']);
-    require __DIR__ . '/../Views/reservations/my-reservations.php';
+
+    $tables = Reservation::getAvailableTables($reservedAt, $durationHours);
+    $this->json($tables);
 }
 ```
 
 ---
 
-**Ajouter une route AJAX pour la disponibilité dans `ReservationController` :**
+**Mettre à jour `Views/reservations/create.php`** — ajouter le JS `fetch()` :
 
-```php
-// POST /reservations/available  (appel depuis le formulaire)
-public function available(): void {
-    header('Content-Type: application/json');
-    $reservedAt    = $_POST['reserved_at'] ?? '';
-    $durationHours = (int) ($_POST['duration_hours'] ?? 0);
+```html
+<button type="button" id="check-btn">Vérifier la disponibilité</button>
+<div id="tables-result"></div>
 
-    if (!$reservedAt || !$durationHours) {
-        echo json_encode(['error' => 'Paramètres manquants']);
-        return;
-    }
+<script>
+document.getElementById('check-btn').addEventListener('click', () => {
+    const reservedAt    = document.getElementById('reserved_at').value;
+    const durationHours = document.getElementById('duration_hours').value;
 
-    $tables = Reservation::getAvailableTables($reservedAt, $durationHours);
-    echo json_encode($tables);
-}
+    fetch('/reservations/available', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `reserved_at=${reservedAt}&duration_hours=${durationHours}`
+    })
+    .then(r => r.json())
+    .then(tables => {
+        const div = document.getElementById('tables-result');
+        if (!tables.length) {
+            div.innerHTML = '<p>Aucune table disponible pour ce créneau.</p>';
+            return;
+        }
+        div.innerHTML = tables.map(t =>
+            `<label>
+               <input type="radio" name="table_id" value="${t.id}">
+               ${t.name} (${t.capacity} personnes)
+             </label>`
+        ).join('');
+    });
+});
+</script>
 ```
-
-Ajouter la route dans `index.php` :
-```php
-$router->post('/reservations/available', 'ReservationController@available');
-```
-
-**Mettre à jour `Views/reservations/create.php`** : ajouter un petit JS `fetch()` qui appelle `/reservations/available` au clic de "Vérifier la disponibilité" et affiche les tables retournées sous forme de boutons radio.
 
 **Mettre à jour `Views/reservations/my-reservations.php`** : boucler sur `$reservations` avec badge couleur selon `$r['status']`.
 
@@ -930,13 +1148,12 @@ $router->post('/reservations/available', 'ReservationController@available');
 
 namespace App\Models;
 
-use App\Core\Database;
+use Core\Database;
 
 class Session {
 
-    // Récupère toutes les sessions actives avec JOIN complet
     public static function getActive(): array {
-        $pdo = Database::connect();
+        $pdo  = Database::connect();
         $stmt = $pdo->query('
             SELECT s.*, g.name AS game_name, t.name AS table_name,
                    u.name AS client_name, r.duration_hours,
@@ -951,9 +1168,8 @@ class Session {
         return $stmt->fetchAll();
     }
 
-    // Récupère toutes les tables + statut session active si occupée
     public static function getAllTablesWithStatus(): array {
-        $pdo = Database::connect();
+        $pdo  = Database::connect();
         $stmt = $pdo->query('
             SELECT t.*,
                    s.id AS session_id, s.started_at,
@@ -961,16 +1177,16 @@ class Session {
                    u.name AS client_name,
                    r.duration_hours
             FROM tables t
-            LEFT JOIN sessions s ON s.table_id = t.id AND s.ended_at IS NULL
-            LEFT JOIN games g    ON s.game_id = g.id
+            LEFT JOIN sessions s     ON s.table_id = t.id AND s.ended_at IS NULL
+            LEFT JOIN games g        ON s.game_id = g.id
             LEFT JOIN reservations r ON s.reservation_id = r.id
-            LEFT JOIN users u    ON r.user_id = u.id
+            LEFT JOIN users u        ON r.user_id = u.id
         ');
         return $stmt->fetchAll();
     }
 
     public static function create(array $data): bool {
-        $pdo = Database::connect();
+        $pdo  = Database::connect();
         $stmt = $pdo->prepare('
             INSERT INTO sessions (reservation_id, game_id, table_id, started_at)
             VALUES (?, ?, ?, NOW())
@@ -993,32 +1209,25 @@ class Session {
 
 namespace App\Controllers;
 
+use Core\Controller;
+use Core\Database;
 use App\Models\Session;
 use App\Models\Game;
-use App\Models\Reservation;
 
-class SessionController {
-
-    private function requireAdmin(): void {
-        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-            http_response_code(403);
-            echo '<h1>Accès réservé à l\'admin</h1>';
-            exit;
-        }
-    }
+class SessionController extends Controller {
 
     // GET /sessions/dashboard
     public function dashboard(): void {
         $this->requireAdmin();
         $tables = Session::getAllTablesWithStatus();
-        require __DIR__ . '/../Views/sessions/dashboard.php';
+        $this->view('sessions/dashboard', ['tables' => $tables]);
     }
 
     // GET /sessions/create
     public function create(): void {
         $this->requireAdmin();
-        // Réservations confirmées sans session active
-        $pdo = \App\Core\Database::connect();
+
+        $pdo  = Database::connect();
         $stmt = $pdo->query('
             SELECT r.*, u.name AS client_name, t.name AS table_name
             FROM reservations r
@@ -1028,49 +1237,40 @@ class SessionController {
             AND r.id NOT IN (SELECT reservation_id FROM sessions WHERE ended_at IS NULL)
         ');
         $reservations = $stmt->fetchAll();
-        $games = Game::allByStatus('available');
-        require __DIR__ . '/../Views/sessions/create.php';
+        $games        = Game::allByStatus('available');
+
+        $this->view('sessions/create', [
+            'reservations' => $reservations,
+            'games'        => $games,
+        ]);
     }
 
     // POST /sessions
     public function store(): void {
         $this->requireAdmin();
 
-        // Démarrer la session
         Session::create([
-            'reservation_id' => (int) $_POST['reservation_id'],
-            'game_id'        => (int) $_POST['game_id'],
-            'table_id'       => (int) $_POST['table_id'],
+            'reservation_id' => (int) $this->post('reservation_id'),
+            'game_id'        => (int) $this->post('game_id'),
+            'table_id'       => (int) $this->post('table_id'),
         ]);
 
-        // Marquer la table comme occupée
-        $pdo = \App\Core\Database::connect();
+        $pdo = Database::connect();
         $pdo->prepare("UPDATE tables SET status = 'occupied' WHERE id = ?")
-            ->execute([(int) $_POST['table_id']]);
-
-        // Marquer le jeu comme en cours
+            ->execute([(int) $this->post('table_id')]);
         $pdo->prepare("UPDATE games SET status = 'in_use' WHERE id = ?")
-            ->execute([(int) $_POST['game_id']]);
+            ->execute([(int) $this->post('game_id')]);
 
-        header('Location: /sessions/dashboard');
-        exit;
+        $this->redirect('/sessions/dashboard');
     }
-}
-```
-
-**Ajouter à `app/Models/Game.php` :**
-```php
-public static function allByStatus(string $status): array {
-    $pdo = Database::connect();
-    $stmt = $pdo->prepare('SELECT * FROM games WHERE status = ?');
-    $stmt->execute([$status]);
-    return $stmt->fetchAll();
 }
 ```
 
 **Mettre à jour `Views/sessions/dashboard.php`** : boucler sur `$tables`, afficher les infos de session si `$table['session_id']` est défini, calculer `elapsed_minutes` vs `duration_hours * 60`.
 
-**Livrable :** Dashboard affiche toutes les tables avec statut réel · formulaire "Démarrer session" fonctionne · table + jeu passent à `occupied`/`in_use` après démarrage.
+**Mettre à jour `Views/sessions/create.php`** : boucler sur `$reservations` et `$games` pour peupler les `<select>`.
+
+**Livrable :** Dashboard affiche toutes les tables avec statut réel · formulaire "Démarrer session" fonctionne · table + jeu passent à `occupied`/`in_use`.
 
 ---
 
@@ -1090,28 +1290,28 @@ public static function allByStatus(string $status): array {
 
 ```php
 public function index(): void {
-    $category = $_GET['category'] ?? null;
+    $category        = $this->get('category');
     $validCategories = ['Stratégie', 'Ambiance', 'Famille', 'Experts'];
 
     if ($category && in_array($category, $validCategories)) {
         $games = Game::allByCategory($category);
     } else {
-        $games = Game::all();
+        $games    = Game::all();
         $category = null;
     }
 
-    require __DIR__ . '/../Views/games/index.php';
+    $this->view('games/index', ['games' => $games, 'category' => $category]);
 }
 ```
 
 **Mettre à jour `Views/games/index.php` :**
-- Les boutons de filtre sont des liens `<a href="/games?category=Stratégie">` etc.
+- Les boutons filtre sont des liens `<a href="/games?category=Stratégie">` etc.
 - Le bouton actif a une classe CSS différente : `$category === 'Stratégie' ? 'active' : ''`
 - Lien "Tous" → `/games` (sans paramètre)
 
 **Mettre à jour `Views/games/create.php` et `edit.php` :**
 - Afficher les erreurs `$errors` si le tableau est défini
-- Conserver les valeurs saisies (attribut `value="<?= htmlspecialchars($_POST['name'] ?? '') ?>"`)
+- Conserver les valeurs saisies : `value="<?= htmlspecialchars($game['name'] ?? '') ?>"`
 
 **Livrable :** Filtre par catégorie fonctionne via URL · erreurs de formulaire affichées avec les valeurs conservées.
 
@@ -1129,7 +1329,7 @@ public function index(): void {
 
 ```php
 public static function all(): array {
-    $pdo = Database::connect();
+    $pdo  = Database::connect();
     $stmt = $pdo->query('
         SELECT r.*, u.name AS client_name, u.phone, t.name AS table_name
         FROM reservations r
@@ -1144,7 +1344,7 @@ public static function updateStatus(int $id, string $status): bool {
     $allowed = ['pending', 'confirmed', 'completed', 'cancelled'];
     if (!in_array($status, $allowed)) return false;
 
-    $pdo = Database::connect();
+    $pdo  = Database::connect();
     $stmt = $pdo->prepare('UPDATE reservations SET status = ? WHERE id = ?');
     return $stmt->execute([$status, $id]);
 }
@@ -1157,34 +1357,28 @@ public static function updateStatus(int $id, string $status): bool {
 ```php
 // GET /reservations
 public function index(): void {
-    if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-        header('Location: /login'); exit;
-    }
+    $this->requireAdmin();
     $reservations = Reservation::all();
-    require __DIR__ . '/../Views/reservations/index.php';
+    $this->view('reservations/index', ['reservations' => $reservations]);
 }
 
 // POST /reservations/{id}/status
 public function updateStatus(int $id): void {
-    if ($_SESSION['role'] !== 'admin') {
-        http_response_code(403); return;
-    }
-    $status = $_POST['status'] ?? '';
-    Reservation::updateStatus($id, $status);
-    header('Location: /reservations');
-    exit;
+    $this->requireAdmin();
+    Reservation::updateStatus($id, $this->post('status', ''));
+    $this->redirect('/reservations');
 }
 ```
 
-**Mettre à jour `Views/reservations/index.php`** : boucler sur `$reservations`, afficher les données avec JOIN (client name, table name, date, heure, durée, party_size, statut). Chaque ligne a un formulaire `<form method="POST" action="/reservations/{id}/status">` avec des boutons Confirmer/Annuler.
+**Mettre à jour `Views/reservations/index.php`** : boucler sur `$reservations`, afficher les données (client name, table name, date, heure, durée, party_size, statut). Chaque ligne a un formulaire `<form method="POST" action="/reservations/<?= $r['id'] ?>/status">` avec boutons Confirmer/Annuler.
 
 **Livrable :** `/reservations` liste toutes les réservations avec infos client et table · boutons Confirmer/Annuler changent le statut en BDD.
 
 ---
 
-### T-12 · Yassin — End Session + Historique + Auth Guard
+### T-12 · Yassin — End Session + Historique + nettoyage Guard
 
-**Objectif :** Terminer une session proprement, consulter l'historique, et protéger toutes les routes admin.
+**Objectif :** Terminer une session proprement et afficher l'historique. Remplacer tous les checks `$_SESSION` inline encore présents dans les controllers par les méthodes de la classe `Controller`.
 
 **Prérequis :** T-09 mergé.
 
@@ -1193,14 +1387,21 @@ public function updateStatus(int $id): void {
 **Ajouter à `app/Models/Session.php` :**
 
 ```php
+public static function find(int $id): array|false {
+    $pdo  = Database::connect();
+    $stmt = $pdo->prepare('SELECT * FROM sessions WHERE id = ?');
+    $stmt->execute([$id]);
+    return $stmt->fetch();
+}
+
 public static function end(int $id): bool {
-    $pdo = Database::connect();
+    $pdo  = Database::connect();
     $stmt = $pdo->prepare('UPDATE sessions SET ended_at = NOW() WHERE id = ?');
     return $stmt->execute([$id]);
 }
 
 public static function getAll(): array {
-    $pdo = Database::connect();
+    $pdo  = Database::connect();
     $stmt = $pdo->query('
         SELECT s.*, g.name AS game_name, t.name AS table_name,
                u.name AS client_name,
@@ -1226,80 +1427,59 @@ public static function getAll(): array {
 public function end(int $id): void {
     $this->requireAdmin();
 
-    // Récupérer la session pour avoir table_id et game_id
-    $pdo = \App\Core\Database::connect();
-    $stmt = $pdo->prepare('SELECT * FROM sessions WHERE id = ?');
-    $stmt->execute([$id]);
-    $session = $stmt->fetch();
+    $session = Session::find($id);
+    if (!$session) $this->notFound();
 
     Session::end($id);
 
-    // Libérer la table
+    $pdo = Database::connect();
     $pdo->prepare("UPDATE tables SET status = 'available' WHERE id = ?")
         ->execute([$session['table_id']]);
-
-    // Remettre le jeu disponible
     $pdo->prepare("UPDATE games SET status = 'available' WHERE id = ?")
         ->execute([$session['game_id']]);
-
-    // Marquer la réservation comme complétée
     $pdo->prepare("UPDATE reservations SET status = 'completed' WHERE id = ?")
         ->execute([$session['reservation_id']]);
 
-    header('Location: /sessions/dashboard');
-    exit;
+    $this->redirect('/sessions/dashboard');
 }
 
 // GET /sessions/history
 public function history(): void {
     $this->requireAdmin();
     $sessions = Session::getAll();
-    require __DIR__ . '/../Views/sessions/history.php';
+    $this->view('sessions/history', ['sessions' => $sessions]);
 }
 ```
 
 ---
 
-**Auth Guard — ajouter `core/Auth.php`**
+**Nettoyage Guard — vérifier les 4 controllers**
 
-```php
-<?php
+Passer en revue `GameController`, `ReservationController`, `SessionController`, `AuthController` et s'assurer qu'**aucun** `$_SESSION`, `header('Location:')` + `exit`, `http_response_code(403)`, ou `require __DIR__` inline ne subsiste. Tout doit passer par les méthodes de `Controller` :
 
-namespace App\Core;
+| Ancien pattern inline | Remplacer par |
+|---|---|
+| `if (!isset($_SESSION['user_id'])) { header(...); exit; }` | `$this->requireLogin()` |
+| `if ($_SESSION['role'] !== 'admin') { http_response_code(403); ... }` | `$this->requireAdmin()` |
+| `$_SESSION['user_id']` | `$this->getUserId()` |
+| `$_SESSION['role']` | `$this->getUserRole()` |
+| `$_POST['key'] ?? ''` | `$this->post('key')` |
+| `$_GET['key'] ?? null` | `$this->get('key')` |
+| `header('Location: /x'); exit;` | `$this->redirect('/x')` |
+| `require __DIR__ . '/../Views/x.php'` | `$this->view('x', [...])` |
+| `echo json_encode(...); exit;` | `$this->json([...])` |
 
-class Auth {
-    public static function requireLogin(): void {
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
-            exit;
-        }
-    }
+**Mettre à jour `Views/sessions/dashboard.php`** — bouton "Terminer" :
 
-    public static function requireAdmin(): void {
-        self::requireLogin();
-        if ($_SESSION['role'] !== 'admin') {
-            http_response_code(403);
-            echo '<h1>403 — Accès interdit</h1>';
-            exit;
-        }
-    }
-
-    public static function user(): array|false {
-        if (!isset($_SESSION['user_id'])) return false;
-        return User::find($_SESSION['user_id']);
-    }
-
-    public static function isAdmin(): bool {
-        return ($_SESSION['role'] ?? '') === 'admin';
-    }
-}
+```html
+<form method="POST" action="/sessions/<?= $table['session_id'] ?>/end">
+    <button type="submit">Terminer la session</button>
+</form>
 ```
 
-Remplacer tous les checks inline `$_SESSION['role'] !== 'admin'` dans les controllers existants par `Auth::requireAdmin()` et `Auth::requireLogin()`.
+**Mettre à jour `Views/sessions/history.php`** : boucler sur `$sessions`, afficher client, jeu, table, `started_at`, `ended_at`, `duration_minutes`.
 
-**Mettre à jour `Views/sessions/history.php`** : boucler sur `$sessions` pour afficher le tableau complet avec durée calculée.
-
-**Livrable :** "Terminer session" libère table + jeu + complète la réservation · `/sessions/history` affiche l'historique · classe `Auth` centralisée utilisable dans tous les controllers.
+**Livrable :** "Terminer session" libère table + jeu + complète la réservation · `/sessions/history` affiche l'historique · zéro check `$_SESSION` inline dans les controllers.
 
 ---
 
@@ -1309,7 +1489,7 @@ Remplacer tous les checks inline `$_SESSION['role'] !== 'admin'` dans les contro
 |---|---|---|
 | **Ilyas** | T-01 · T-04 · T-07 · T-10 | Vues statiques · Module Games complet · Filtre + validation |
 | **Abdelatif** | T-02 · T-05 · T-08 · T-11 | BDD + PDO · Reservations création · Disponibilité · Admin reservations |
-| **Yassin** | T-03 · T-06 · T-09 · T-12 | Structure + Router · Auth système · Sessions dashboard · End session + Guard |
+| **Yassin** | T-03 · T-06 · T-09 · T-12 | Structure + Router + Controller · Auth système · Sessions dashboard · End session + Guard cleanup |
 
 ---
 

@@ -16,7 +16,7 @@
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-            <form class="space-y-8" method="POST" action="/login">
+            <form class="space-y-8" method="POST" action="<?= BASE_URL ?>/login">
                 <div class="space-y-3">
                     <label class="block font-label text-sm font-semibold text-on-surface/70 tracking-wide uppercase" for="email">Email</label>
                     <div class="relative group">
@@ -49,7 +49,7 @@
             <div class="mt-10 pt-8 border-t border-outline-variant/10 text-center">
                 <p class="text-on-surface-variant text-sm font-body">
                     Pas encore de compte ? 
-                    <a class="text-primary font-bold ml-1 hover:underline underline-offset-4 decoration-2 decoration-primary/30 transition-all" href="/register">S'inscrire</a>
+                    <a class="text-primary font-bold ml-1 hover:underline underline-offset-4 decoration-2 decoration-primary/30 transition-all" href="<?= BASE_URL ?>/register">S'inscrire</a>
                 </p>
             </div>
         </div>
