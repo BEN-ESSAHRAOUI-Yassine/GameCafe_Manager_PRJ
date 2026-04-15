@@ -1,45 +1,53 @@
 <?php
 
+define('BASE_URL', '/GameCafe_Manager_PRJ/public');
+echo "start";
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require_once __DIR__ . '/../vendor/autoload.php';
-
-
-
-use Core\Router;
 
 session_start();
 
+use Core\Router;
+
 $router = new Router();
 
+// HOME
+$router->get('/', 'AuthController@home');
 $router->get('/home', 'AuthController@home');
-// Auth
-$router->get('/login',    'AuthController@loginForm');
-$router->post('/login',   'AuthController@login');
+
+// AUTH
+$router->get('/login', 'AuthController@loginForm');
+$router->post('/login', 'AuthController@login');
 $router->get('/register', 'AuthController@registerForm');
-$router->post('/register','AuthController@register');
-$router->post('/logout', 'AuthController@logout', ['AuthMiddleware']);
+$router->post('/register', 'AuthController@register');
+$router->get('/logout', 'AuthController@logout', ['AuthMiddleware']);
 
-// Games
-$router->get('/games/index', 'GameController@index', ['AuthMiddleware']);
-$router->get('/games/create',       'GameController@create');
-$router->post('/games',             'GameController@store');
-$router->get('/games/{id}',         'GameController@show');
-$router->get('/games/{id}/edit',    'GameController@edit');
-$router->post('/games/{id}/update', 'GameController@update');
-$router->post('/games/{id}/delete', 'GameController@destroy');
+// GAMES
+$router->get('/games', 'GameController@index', ['AuthMiddleware']);
+$router->get('/games/{id}', 'GameController@show', ['AuthMiddleware']);
+$router->get('/games/create', 'GameController@create', ['AdminMiddleware']);
+$router->post('/games', 'GameController@store', ['AdminMiddleware']);
+$router->get('/games/{id}/edit', 'GameController@edit', ['AdminMiddleware']);
+$router->post('/games/{id}/update', 'GameController@update', ['AdminMiddleware']);
+$router->post('/games/{id}/delete', 'GameController@destroy', ['AdminMiddleware']);
 
-// Reservations
-$router->get('/reservations',              'ReservationController@index');
-$router->get('/reservations/create',       'ReservationController@create');
-$router->post('/reservations',             'ReservationController@store');
-$router->get('/reservations/my',           'ReservationController@mine');
-$router->post('/reservations/available',   'ReservationController@available');
-$router->post('/reservations/{id}/status', 'ReservationController@updateStatus');
+// RESERVATIONS
+$router->get('/reservations', 'ReservationController@index', ['AdminMiddleware']);
+$router->get('/reservations/create', 'ReservationController@create', ['AuthMiddleware']);
+$router->post('/reservations', 'ReservationController@store', ['AuthMiddleware']);
+$router->get('/reservations/my', 'ReservationController@mine', ['AuthMiddleware']);
+$router->post('/reservations/{id}/status', 'ReservationController@updateStatus', ['AdminMiddleware']);
+$router->post('/reservations/delete', 'ReservationController@delete', ['AdminMiddleware']);
+$router->post('/reservations/available', 'ReservationController@available', ['AuthMiddleware']);
 
-// Sessions
-$router->get('/sessions/dashboard', 'SessionController@dashboard');
-$router->get('/sessions/create',    'SessionController@create');
-$router->post('/sessions',          'SessionController@store');
-$router->post('/sessions/{id}/end', 'SessionController@end');
-$router->get('/sessions/history',   'SessionController@history');
+// SESSIONS
+$router->get('/sessions/dashboard', 'SessionController@dashboard', ['AdminMiddleware']);
+$router->get('/sessions/create', 'SessionController@create', ['AdminMiddleware']);
+$router->post('/sessions', 'SessionController@store', ['AdminMiddleware']);
+$router->post('/sessions/{id}/end', 'SessionController@end', ['AdminMiddleware']);
+$router->get('/sessions/history',   'SessionController@history', ['AdminMiddleware']);
 
+// RUN
 $router->dispatch();

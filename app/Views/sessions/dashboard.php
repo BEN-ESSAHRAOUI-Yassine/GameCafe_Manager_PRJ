@@ -70,7 +70,7 @@
                             </div>
                         <?php endif; ?>
                     </div>
-                    <form method="POST" action="/sessions/<?= $table['session_id'] ?>/end">
+                    <form method="POST" action="<?= BASE_URL ?>/sessions/<?= $table['session_id'] ?>/end">
                         <button class="w-full py-4 rounded-lg bg-error/10 text-error font-bold uppercase tracking-widest text-sm border border-error/20 hover:bg-error hover:text-white transition-all active:scale-95">
                             Terminer la session
                         </button>
@@ -93,7 +93,7 @@
                         <span class="material-symbols-outlined text-4xl opacity-50">table_restaurant</span>
                         <span class="text-sm font-medium">Table disponible</span>
                     </div>
-                    <a href="/sessions/create" class="block w-full py-4 rounded-lg bg-primary/10 text-primary font-bold uppercase tracking-widest text-sm border border-primary/20 hover:bg-primary hover:text-white transition-all active:scale-95 text-center">
+                    <a href="<?= BASE_URL ?>/sessions/create" class="block w-full py-4 rounded-lg bg-primary/10 text-primary font-bold uppercase tracking-widest text-sm border border-primary/20 hover:bg-primary hover:text-white transition-all active:scale-95 text-center">
                         Démarrer une session
                     </a>
                 </div>

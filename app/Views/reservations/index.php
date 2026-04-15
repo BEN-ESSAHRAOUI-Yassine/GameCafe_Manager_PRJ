@@ -62,22 +62,22 @@
                                 <?php endif; ?>
                             </td>
                             <td class="px-6 py-6 text-center">
-                                <a href="/reservations/<?= $reservation['id'] ?>" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface-variant hover:text-primary transition-colors">
+                                <a href="<?= BASE_URL ?>/reservations/<?= $reservation['id'] ?>" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface-variant hover:text-primary transition-colors">
                                     <span class="material-symbols-outlined text-lg">visibility</span>
                                 </a>
                             </td>
                             <td class="px-6 py-6 text-right">
                                 <?php if ($reservation['status'] === 'pending'): ?>
-                                    <form method="POST" action="/reservations/<?= $reservation['id'] ?>/status" class="inline">
+                                    <form method="POST" action="<?= BASE_URL ?>/reservations/<?= $reservation['id'] ?>/status" class="inline">
                                         <input type="hidden" name="status" value="confirmed">
                                         <button type="submit" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-emerald-500/20">Confirmer</button>
                                     </form>
-                                    <form method="POST" action="/reservations/<?= $reservation['id'] ?>/status" class="inline ml-2">
+                                    <form method="POST" action="<?= BASE_URL ?>/reservations/<?= $reservation['id'] ?>/status" class="inline ml-2">
                                         <input type="hidden" name="status" value="cancelled">
                                         <button type="submit" class="bg-transparent hover:bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Annuler</button>
                                     </form>
                                 <?php elseif ($reservation['status'] === 'confirmed'): ?>
-                                    <form method="POST" action="/reservations/<?= $reservation['id'] ?>/status" class="inline">
+                                    <form method="POST" action="<?= BASE_URL ?>/reservations/<?= $reservation['id'] ?>/status" class="inline">
                                         <input type="hidden" name="status" value="cancelled">
                                         <button type="submit" class="bg-transparent hover:bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Annuler</button>
                                     </form>

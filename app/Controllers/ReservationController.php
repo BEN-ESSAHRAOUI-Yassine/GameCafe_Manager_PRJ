@@ -16,69 +16,94 @@ class ReservationController extends Controller
     // ✅ Show all reservations
     public function index()
     {
+        $this->requireAdmin();
+
         $reservations = $this->reservationModel->getWithDetails();
-        $this->view('reservations/index');
+
+        $this->view('reservations/index', [
+            'reservations' => $reservations
+        ]);
     }
 
     // ✅ Show create form
     public function create()
     {
+        $this->requireLogin();
+
         $this->view('reservations/create');
     }
 
     // ✅ Store new reservation (POST)
     public function store()
     {
+        $this->requireLogin();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $data = [
-                'user_id' => $_POST['user_id'],
-                'table_id' => $_POST['table_id'],
-                'party_size' => $_POST['party_size'],
-                'reserved_at' => $_POST['reserved_at'],
-                'duration_hours' => $_POST['duration_hours'],
-                'status' => 'confirmed'
+                'user_id'        => $this->getUserId(), // ✅ NEVER trust POST user_id
+                'table_id'       => $_POST['table_id'] ?? null,
+                'party_size'     => $_POST['party_size'] ?? 1,
+                'reserved_at'    => $_POST['reserved_at'] ?? null,
+                'duration_hours' => $_POST['duration_hours'] ?? 1,
+                'status'         => 'confirmed'
             ];
 
             $this->reservationModel->create($data);
 
             // redirect
-            $this->redirect('reservations/index');
+            $this->redirect('/reservations/my');
         }
     }
 
     // ✅ Show single reservation
     public function show($id)
     {
+        $this->requireLogin();
+
         $reservation = $this->reservationModel->getById($id);
 
-        $this->view('my-reservations');
+        if (!$reservation) {
+            $this->notFound();
+            return;
+        }
+
+        $this->view('reservations/show', [
+            'reservation' => $reservation
+        ]);
     }
 
     // ✅ Update status (confirm / cancel)
     public function updateStatus()
     {
+        $this->requireAdmin();
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            $id = $_POST['id'];
-            $status = $_POST['status'];
+            $id     = $_POST['id'] ?? null;
+            $status = $_POST['status'] ?? null;
 
-            $this->reservationModel->updateStatus($id, $status);
+            if ($id && $status) {
+                $this->reservationModel->updateStatus($id, $status);
+            }
 
-            $this->redirect('reservations/index');
+            $this->redirect('/reservations');
         }
     }
 
     // ✅ Delete reservation
     public function delete()
     {
+        $this->requireAdmin();
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            $id = $_POST['id'];
+            $id = $_POST['id'] ?? null;
 
-            $this->reservationModel->delete($id);
+            if ($id) {
+                $this->reservationModel->delete($id);
+            }
 
-            $this->redirect('reservations/index');
+            $this->redirect('/reservations');
         }
     }
 
@@ -86,8 +111,12 @@ class ReservationController extends Controller
     // GET /reservations/my
     public function mine(): void {
         $this->requireLogin();
+
         $reservations = $this->reservationModel->findByUser($this->getUserId());
-        $this->view('reservations/my-reservations', ['reservations' => $reservations]);
+
+        $this->view('reservations/my-reservations', [
+            'reservations' => $reservations
+        ]);
     }
 
     // POST /reservations/available
@@ -97,9 +126,11 @@ class ReservationController extends Controller
 
         if (!$reservedAt || !$durationHours) {
             $this->json(['error' => 'Paramètres manquants'], 400);
+            return;
         }
 
         $tables = Reservation::getAvailableTables($reservedAt, $durationHours);
+
         $this->json($tables);
     }
 }

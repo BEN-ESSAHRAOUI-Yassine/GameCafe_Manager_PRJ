@@ -77,7 +77,7 @@
     <div class="text-center py-20">
         <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4">history</span>
         <p class="text-on-surface-variant text-lg">Aucune session terminée.</p>
-        <a href="/sessions/dashboard" class="text-primary font-bold mt-4 inline-block">Voir le dashboard</a>
+        <a href="<?= BASE_URL ?>/sessions/dashboard" class="text-primary font-bold mt-4 inline-block">Voir le dashboard</a>
     </div>
     <?php endif; ?>
     </div>

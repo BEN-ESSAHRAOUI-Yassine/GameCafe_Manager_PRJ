@@ -51,4 +51,33 @@ class Session {
             $data['table_id'],
         ]);
     }
+    public static function find(int $id): array|false {
+        $pdo  = Database::connect();
+        $stmt = $pdo->prepare('SELECT * FROM sessions WHERE id = ?');
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
+    public static function end(int $id): bool {
+        $pdo  = Database::connect();
+        $stmt = $pdo->prepare('UPDATE sessions SET ended_at = NOW() WHERE id = ?');
+        return $stmt->execute([$id]);
+    }
+
+    public static function getAll(): array {
+        $pdo  = Database::connect();
+        $stmt = $pdo->query('
+            SELECT s.*, g.name AS game_name, t.name AS table_name,
+                u.name AS client_name,
+                TIMESTAMPDIFF(MINUTE, s.started_at, s.ended_at) AS duration_minutes
+            FROM sessions s
+            JOIN games g        ON s.game_id = g.id
+            JOIN tables t       ON s.table_id = t.id
+            JOIN reservations r ON s.reservation_id = r.id
+            JOIN users u        ON r.user_id = u.id
+            WHERE s.ended_at IS NOT NULL
+            ORDER BY s.ended_at DESC
+        ');
+        return $stmt->fetchAll();
+    }
 }

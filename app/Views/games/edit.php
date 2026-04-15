@@ -22,7 +22,7 @@
             </div>
         <?php endif; ?>
         
-        <form method="POST" action="/games/<?= $game['id'] ?>/update" class="space-y-6">
+        <form method="POST" action="<?= BASE_URL ?>/games/<?= $game['id'] ?>/update" class="space-y-6">
             <div class="space-y-2">
                 <label class="block font-label text-xs uppercase tracking-widest text-on-surface-variant opacity-70 ml-1" for="name">Nom du jeu</label>
                 <input class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-on-surface outline-none input-focus" name="name" type="text" value="<?= htmlspecialchars($game['name'] ?? '') ?>"/>
@@ -80,7 +80,7 @@
                     <span class="material-symbols-outlined">save</span>
                     Enregistrer les modifications
                 </button>
-                <a href="/games/<?= $game['id'] ?>" class="w-full border-2 border-error text-error font-bold py-4 px-6 rounded-lg hover:bg-error/10 transition-all flex items-center justify-center gap-2 text-center">
+                <a href="<?= BASE_URL ?>/games/<?= $game['id'] ?>" class="w-full border-2 border-error text-error font-bold py-4 px-6 rounded-lg hover:bg-error/10 transition-all flex items-center justify-center gap-2 text-center">
                     <span class="material-symbols-outlined">close</span>
                     Annuler
                 </a>
