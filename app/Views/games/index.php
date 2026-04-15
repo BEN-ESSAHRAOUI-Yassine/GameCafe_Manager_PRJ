@@ -1,4 +1,4 @@
-<main class="pt-32 pb-24 px-4 md:px-12 max-w-7xl mx-auto relative overflow-hidden">
+<main class="pt-32 pb-24 px-4 md:px-12 max-w-7xl relative overflow-hidden">
     <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden opacity-20">
         <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-[120px]"></div>
         <div class="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]"></div>
@@ -20,13 +20,15 @@
                 <a href="/games?category=Experts" class="px-6 py-2 rounded-full <?= $category === 'Experts' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Experts</a>
             </div>
         </section>
-        <a href="/games/create" class="flex items-center gap-2 btn-primary px-8 py-4 rounded-xl font-headline font-bold transition-transform active:scale-95 self-start lg:self-end">
-            <span class="material-symbols-outlined">add</span>
-            Ajouter un jeu
-        </a>
+<?php if (\Core\Controller::isAdmin()): ?>
+            <a href="/games/create" class="flex items-center gap-2 btn-primary px-8 py-4 rounded-xl font-headline font-bold transition-transform active:scale-95 self-start lg:self-end">
+                <span class="material-symbols-outlined">add</span>
+                Ajouter un jeu
+            </a>
+            <?php endif; ?>
     </section>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-2 gap-6">
         <?php foreach ($games as $game): ?>
             <article class="group bg-surface-container-low rounded-xl overflow-hidden flex flex-col transition-all duration-300 hover:translate-y-[-4px] border border-outline-variant/15">
                 <div class="h-64 relative overflow-hidden">

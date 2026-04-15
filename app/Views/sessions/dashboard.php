@@ -1,4 +1,4 @@
-<main class="pt-28 pb-20 px-6 md:px-12 max-w-7xl mx-auto min-h-screen flex flex-col relative overflow-hidden">
+<main class="pt-28 pb-20 px-6 md:px-12 max-w-7xl min-h-screen flex flex-col relative overflow-hidden">
     <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden opacity-20">
         <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-[120px]"></div>
         <div class="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]"></div>
