@@ -13,15 +13,15 @@
                 <p class="text-on-surface-variant font-body opacity-80">Découvrez notre collection</p>
             </div>
             <div class="flex flex-wrap gap-2">
-                <a href="/games" class="px-6 py-2 rounded-full <?= $category === null ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Tous</a>
-                <a href="/games?category=Stratégie" class="px-6 py-2 rounded-full <?= $category === 'Stratégie' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Stratégie</a>
-                <a href="/games?category=Ambiance" class="px-6 py-2 rounded-full <?= $category === 'Ambiance' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Ambiance</a>
-                <a href="/games?category=Famille" class="px-6 py-2 rounded-full <?= $category === 'Famille' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Famille</a>
-                <a href="/games?category=Experts" class="px-6 py-2 rounded-full <?= $category === 'Experts' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Experts</a>
+                <a href="<?= BASE_URL ?>/games" class="px-6 py-2 rounded-full <?= $category === null ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Tous</a>
+                <a href="<?= BASE_URL ?>/games?category=Stratégie" class="px-6 py-2 rounded-full <?= $category === 'Stratégie' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Stratégie</a>
+                <a href="<?= BASE_URL ?>/games?category=Ambiance" class="px-6 py-2 rounded-full <?= $category === 'Ambiance' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Ambiance</a>
+                <a href="<?= BASE_URL ?>/games?category=Famille" class="px-6 py-2 rounded-full <?= $category === 'Famille' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Famille</a>
+                <a href="<?= BASE_URL ?>/games?category=Experts" class="px-6 py-2 rounded-full <?= $category === 'Experts' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant' ?> font-headline text-sm font-bold transition-all">Experts</a>
             </div>
         </section>
 <?php if (\Core\Controller::isAdmin()): ?>
-            <a href="/games/create" class="flex items-center gap-2 btn-primary px-8 py-4 rounded-xl font-headline font-bold transition-transform active:scale-95 self-start lg:self-end">
+            <a href="<?= BASE_URL ?>/games/create" class="flex items-center gap-2 btn-primary px-8 py-4 rounded-xl font-headline font-bold transition-transform active:scale-95 self-start lg:self-end">
                 <span class="material-symbols-outlined">add</span>
                 Ajouter un jeu
             </a>
@@ -64,7 +64,7 @@
                             <?= $game['duration_minutes'] ?> min
                         </div>
                     </div>
-                    <a class="mt-auto flex items-center gap-2 text-primary font-headline font-bold hover:gap-4 transition-all" href="/games/<?= $game['id'] ?>">
+                    <a class="mt-auto flex items-center gap-2 text-primary font-headline font-bold hover:gap-4 transition-all" href="<?= BASE_URL ?>/games/<?= $game['id'] ?>">
                         Voir les détails <span class="material-symbols-outlined">arrow_forward</span>
                     </a>
                 </div>

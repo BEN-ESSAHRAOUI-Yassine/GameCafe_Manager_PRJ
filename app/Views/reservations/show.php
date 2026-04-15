@@ -5,7 +5,7 @@
     </div>
     
     <div class="relative z-10">
-        <a href="/reservations<?= \Core\Controller::isAdmin() ? '' : '/my-reservations' ?>" class="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors mb-8">
+        <a href="<?= BASE_URL ?>/reservations<?= \Core\Controller::isAdmin() ? '' : '/my-reservations' ?>" class="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors mb-8">
             <span class="material-symbols-outlined">arrow_back</span>
             Retour
         </a>
@@ -71,16 +71,16 @@
             <?php if (\Core\Controller::isAdmin() && in_array($reservation['status'], ['pending', 'confirmed'])): ?>
             <div class="mt-8 pt-6 border-t border-outline-variant/10 flex gap-3">
                 <?php if ($reservation['status'] === 'pending'): ?>
-                    <form method="POST" action="/reservations/<?= $reservation['id'] ?>/status" class="flex-1">
+                    <form method="POST" action="<?= BASE_URL ?>/reservations/<?= $reservation['id'] ?>/status" class="flex-1">
                         <input type="hidden" name="status" value="confirmed">
                         <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-lg font-bold transition-all">Confirmer</button>
                     </form>
-                    <form method="POST" action="/reservations/<?= $reservation['id'] ?>/status" class="flex-1">
+                    <form method="POST" action="<?= BASE_URL ?>/reservations/<?= $reservation['id'] ?>/status" class="flex-1">
                         <input type="hidden" name="status" value="cancelled">
                         <button type="submit" class="w-full bg-transparent hover:bg-red-500/10 text-red-400 border border-red-500/20 px-4 py-3 rounded-lg font-bold transition-all">Annuler</button>
                     </form>
                 <?php elseif ($reservation['status'] === 'confirmed'): ?>
-                    <form method="POST" action="/reservations/<?= $reservation['id'] ?>/status" class="flex-1">
+                    <form method="POST" action="<?= BASE_URL ?>/reservations/<?= $reservation['id'] ?>/status" class="flex-1">
                         <input type="hidden" name="status" value="cancelled">
                         <button type="submit" class="w-full bg-transparent hover:bg-red-500/10 text-red-400 border border-red-500/20 px-4 py-3 rounded-lg font-bold transition-all">Annuler la réservation</button>
                     </form>

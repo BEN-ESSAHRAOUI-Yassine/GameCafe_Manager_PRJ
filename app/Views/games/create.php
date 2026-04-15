@@ -26,7 +26,7 @@
             </div>
         <?php endif; ?>
         
-        <form method="POST" action="/games" class="space-y-6">
+        <form method="POST" action="<?= BASE_URL ?>/games" class="space-y-6">
             <div class="space-y-2">
                 <label class="block font-label text-xs uppercase tracking-widest text-on-surface-variant opacity-70 ml-1" for="name">
                     Nom du jeu
@@ -94,7 +94,7 @@
                 <button class="w-full md:w-auto px-10 py-4 btn-primary font-headline font-bold rounded-lg transition-all" type="submit">
                     Ajouter le jeu
                 </button>
-                <a href="/games" class="w-full md:w-auto px-10 py-4 bg-transparent text-on-surface-variant font-bold rounded-lg border border-outline-variant/30 hover:border-primary hover:text-primary transition-all text-center">
+                <a href="<?= BASE_URL ?>/games" class="w-full md:w-auto px-10 py-4 bg-transparent text-on-surface-variant font-bold rounded-lg border border-outline-variant/30 hover:border-primary hover:text-primary transition-all text-center">
                     Annuler
                 </a>
             </div>

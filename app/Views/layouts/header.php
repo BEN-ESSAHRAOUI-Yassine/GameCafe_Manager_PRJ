@@ -10,21 +10,21 @@
 <body class="bg-surface text-on-surface font-body min-h-screen flex flex-col">
     <header class="fixed top-0 left-0 w-full z-50 bg-surface-dim/80 backdrop-blur-xl border-b border-outline-variant/10">
         <div class="flex items-center justify-between w-full px-4 md:px-12 py-4">
-            <a href="/" class="flex items-center gap-2">
+            <a href="<?= BASE_URL ?>/" class="flex items-center gap-2">
                 <span class="text-xl">🎲</span>
                 <span class="font-headline font-bold text-lg tracking-tight text-primary">Aji L3bo Café</span>
             </a>
             <nav class="flex items-center gap-6">
-                <a href="/games" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Jeux</a>
+                <a href="<?= BASE_URL ?>/games" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Jeux</a>
                 <?php if (\Core\Controller::isAdmin()): ?>
-                    <a href="/reservations" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Réservations</a>
+                    <a href="<?= BASE_URL ?>/reservations" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Réservations</a>
                 <?php elseif (\Core\Controller::isLoggedIn()): ?>
-                    <a href="/reservations/my-reservations" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Mes Réservations</a>
+                    <a href="<?= BASE_URL ?>/reservations/my-reservations" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Mes Réservations</a>
                 <?php endif; ?>
                 <?php if (\Core\Controller::isLoggedIn()): ?>
-                    <a href="/logout" class="text-on-surface-variant hover:text-error transition-colors font-medium">Déconnexion</a>
+                    <a href="<?= BASE_URL ?>/logout" class="text-on-surface-variant hover:text-error transition-colors font-medium">Déconnexion</a>
                 <?php else: ?>
-                    <a href="/login" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Connexion</a>
+                    <a href="<?= BASE_URL ?>/login" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Connexion</a>
                 <?php endif; ?>
             </nav>
         </div>

@@ -23,7 +23,7 @@
                 </div>
             <?php endif; ?>
             
-            <form method="POST" action="/sessions" class="space-y-6">
+            <form method="POST" action="<?= BASE_URL ?>/sessions" class="space-y-6">
                 <div class="space-y-2">
                     <label class="block font-label text-xs uppercase tracking-widest text-on-surface-variant opacity-70 ml-1" for="reservation_id">Réservation confirmée</label>
                     <div class="relative">
@@ -62,7 +62,7 @@
                         <span class="material-symbols-outlined">play_arrow</span>
                         Démarrer la session
                     </button>
-                    <a href="/sessions/dashboard" class="w-full py-4 bg-transparent border border-outline-variant/30 hover:border-primary hover:text-primary text-on-surface-variant font-bold rounded-lg transition-all block text-center">
+                    <a href="<?= BASE_URL ?>/sessions/dashboard" class="w-full py-4 bg-transparent border border-outline-variant/30 hover:border-primary hover:text-primary text-on-surface-variant font-bold rounded-lg transition-all block text-center">
                         Annuler
                     </a>
                 </div>

@@ -110,7 +110,7 @@ class Reservation
     }
 
     public function findByUser($id){
-        $stmt = $this->connection->prepare("SELECT * FROM tables WHERE id = ?");
+        $stmt = $this->connection->prepare("SELECT * FROM tables WHERE user_id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

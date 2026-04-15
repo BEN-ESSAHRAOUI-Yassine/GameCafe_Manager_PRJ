@@ -56,4 +56,31 @@ class SessionController extends Controller {
 
         $this->redirect('/sessions/dashboard');
     }
+
+    // POST /sessions/{id}/end
+    public function end(int $id): void {
+        $this->requireAdmin();
+
+        $session = Session::find($id);
+        if (!$session) $this->notFound();
+
+        Session::end($id);
+
+        $pdo = Database::connect();
+        $pdo->prepare("UPDATE tables SET status = 'available' WHERE id = ?")
+            ->execute([$session['table_id']]);
+        $pdo->prepare("UPDATE games SET status = 'available' WHERE id = ?")
+            ->execute([$session['game_id']]);
+        $pdo->prepare("UPDATE reservations SET status = 'completed' WHERE id = ?")
+            ->execute([$session['reservation_id']]);
+
+        $this->redirect('/sessions/dashboard');
+    }
+
+    // GET /sessions/history
+    public function history(): void {
+        $this->requireAdmin();
+        $sessions = Session::getAll();
+        $this->view('sessions/history', ['sessions' => $sessions]);
+    }
 }

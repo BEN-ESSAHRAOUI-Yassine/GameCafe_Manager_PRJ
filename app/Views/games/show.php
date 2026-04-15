@@ -4,7 +4,7 @@
         <div class="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]"></div>
     </div>
 
-    <a class="inline-flex items-center gap-2 text-primary hover:text-primary-fixed-dim transition-colors mb-12 group relative z-10" href="/games">
+    <a class="inline-flex items-center gap-2 text-primary hover:text-primary-fixed-dim transition-colors mb-12 group relative z-10" href="<?= BASE_URL ?>/games">
         <span class="material-symbols-outlined transition-transform group-hover:-translate-x-1">arrow_back</span>
         <span class="font-semibold text-sm tracking-wide uppercase">Retour au catalogue</span>
     </a>
@@ -67,11 +67,11 @@
 
             <?php if (\Core\Controller::isAdmin()): ?>
             <div class="mt-8 pt-8 border-t border-outline-variant/15 flex flex-col sm:flex-row items-center gap-4">
-                <a href="/games/<?= $game['id'] ?>/edit" class="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 border-2 border-primary-container text-primary-container rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-primary-container hover:text-on-primary transition-all active:scale-95">
+                <a href="<?= BASE_URL ?>/games/<?= $game['id'] ?>/edit" class="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 border-2 border-primary-container text-primary-container rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-primary-container hover:text-on-primary transition-all active:scale-95">
                     <span class="material-symbols-outlined text-lg">edit</span>
                     Modifier
                 </a>
-                <form method="POST" action="/games/<?= $game['id'] ?>/delete" class="w-full sm:w-auto">
+                <form method="POST" action="<?= BASE_URL ?>/games/<?= $game['id'] ?>/delete" class="w-full sm:w-auto">
                     <button type="submit" class="w-full flex items-center justify-center gap-2 px-8 py-4 border-2 border-error text-error rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-error hover:text-on-error transition-all active:scale-95">
                         <span class="material-symbols-outlined text-lg">delete</span>
                         Supprimer

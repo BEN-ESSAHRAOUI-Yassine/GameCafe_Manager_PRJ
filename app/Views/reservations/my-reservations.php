@@ -14,7 +14,7 @@
                 <h1 class="font-headline text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface mb-2">Mes Réservations</h1>
                 <p class="text-on-surface-variant font-medium text-lg">Historique de vos réservations</p>
             </div>
-            <a href="/reservations/create" class="inline-flex items-center gap-2 btn-primary px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform">
+            <a href="<?= BASE_URL ?>/reservations/create" class="inline-flex items-center gap-2 btn-primary px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform">
                 <span class="material-symbols-outlined">add_circle</span>
                 + Nouvelle Réservation
             </a>
@@ -65,7 +65,7 @@
                                 <?php endif; ?>
                             </td>
                             <td class="px-8 py-6 text-right">
-                                <a href="/reservations/<?= $reservation['id'] ?>" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface-variant hover:text-primary transition-colors">
+                                <a href="<?= BASE_URL ?>/reservations/<?= $reservation['id'] ?>" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface-variant hover:text-primary transition-colors">
                                     <span class="material-symbols-outlined text-lg">visibility</span>
                                 </a>
                             </td>
@@ -79,7 +79,7 @@
     <div class="text-center py-20">
         <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4">event_busy</span>
         <p class="text-on-surface-variant text-lg">Aucune réservation trouvée.</p>
-        <a href="/reservations/create" class="text-primary font-bold mt-4 inline-block">Créer une réservation</a>
+        <a href="<?= BASE_URL ?>/reservations/create" class="text-primary font-bold mt-4 inline-block">Créer une réservation</a>
     </div>
     <?php endif; ?>
     </div>

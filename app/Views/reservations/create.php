@@ -23,7 +23,7 @@
             </div>
         <?php endif; ?>
         
-        <form method="POST" action="/reservations" class="space-y-6">
+        <form method="POST" action="<?= BASE_URL ?>/reservations" class="space-y-6">
             <div class="space-y-2">
                 <label class="block font-label text-xs uppercase tracking-widest text-on-surface-variant opacity-70 ml-1" for="party_size">Nombre de personnes</label>
                 <input class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-on-surface outline-none input-focus" id="party_size" name="party_size" placeholder="2" type="number" min="1" max="10"/>

@@ -2,7 +2,6 @@
 
 namespace Core;
 
-define('BASE_URL', '/GameCafe_Manager_PRJ/public');
 class Router {
     private array $routes = [];
 
@@ -23,8 +22,20 @@ class Router {
 public function dispatch(): void {
     $method = $_SERVER['REQUEST_METHOD'];
     $uri = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') ?: '/';
-    $basePath = '/GameCafe_Manager_PRJ/public';
-    $uri = str_replace($basePath, '', $uri) ?? '/';
+    if (str_starts_with($uri, BASE_URL)) {
+        $uri = substr($uri, strlen(BASE_URL));
+    }
+    //echo "A<br>";
+    $uri = '/' . ltrim($uri, '/');
+
+    // fallback
+    if ($uri === '') {
+        $uri = '/';
+    }
+    //var_dump($uri);
+    //var_dump($method);
+    //var_dump($this->routes[$method] ?? 'NO ROUTES FOR THIS METHOD');
+    //exit;
     if (!isset($this->routes[$method])) {
         http_response_code(405);
         echo "Method Not Allowed";
@@ -33,7 +44,12 @@ public function dispatch(): void {
     foreach ($this->routes[$method] as $route => $data) {
         $pattern = preg_replace('/\{[a-zA-Z_]+\}/', '([^/]+)', $route);
         $pattern = '#^' . $pattern . '$#';
-
+        //var_dump($route, $pattern, $uri);
+        
+        //if (preg_match($pattern, $uri, $matches)) {
+        //   var_dump("MATCHED!", $route);
+        //   exit;
+        //}
         if (preg_match($pattern, $uri, $matches)) {
             array_shift($matches);
 
