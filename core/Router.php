@@ -2,6 +2,7 @@
 
 namespace Core;
 
+define('BASE_URL', '/GameCafe_Manager_PRJ/public');
 class Router {
     private array $routes = [];
 
@@ -23,13 +24,12 @@ public function dispatch(): void {
     $method = $_SERVER['REQUEST_METHOD'];
     $uri = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') ?: '/';
     $basePath = '/GameCafe_Manager_PRJ/public';
-    $uri = str_replace($basePath, '', $uri);
+    $uri = str_replace($basePath, '', $uri) ?? '/';
     if (!isset($this->routes[$method])) {
         http_response_code(405);
         echo "Method Not Allowed";
         return;
     }
-
     foreach ($this->routes[$method] as $route => $data) {
         $pattern = preg_replace('/\{[a-zA-Z_]+\}/', '([^/]+)', $route);
         $pattern = '#^' . $pattern . '$#';

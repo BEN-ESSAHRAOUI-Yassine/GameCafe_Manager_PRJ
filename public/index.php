@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-define('BASE_URL', '/GameCafe_Manager_PRJ/public');
+
 
 use Core\Router;
 
@@ -10,7 +10,7 @@ session_start();
 
 $router = new Router();
 
-$router->get('/', 'AuthController@home');
+$router->get('/home', 'AuthController@home');
 // Auth
 $router->get('/login',    'AuthController@loginForm');
 $router->post('/login',   'AuthController@login');
