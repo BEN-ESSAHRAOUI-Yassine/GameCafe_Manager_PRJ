@@ -3,9 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\Reservation;
-
-require_once __DIR__ . '/../models/Reservation.php';
-
 class ReservationController
 {
     private $reservationModel;
