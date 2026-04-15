@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Core\Database;
+use PDO;
 
 class Reservation
 {
@@ -89,5 +90,28 @@ class Reservation
         $sql = "DELETE FROM {$this->table} WHERE id = :id";
         $stmt = $this->connection->prepare($sql);
         return $stmt->execute([':id' => $id]);
+    }
+
+    public static function getAvailableTables(string $reservedAt, int $durationHours): array {
+        $pdo  = Database::connect();
+        $stmt = $pdo->prepare('
+            SELECT t.*
+            FROM tables t
+            WHERE t.id NOT IN (
+                SELECT r.table_id
+                FROM reservations r
+                WHERE r.status IN ("pending", "confirmed")
+                AND r.reserved_at < DATE_ADD(?, INTERVAL ? HOUR)
+                AND DATE_ADD(r.reserved_at, INTERVAL r.duration_hours HOUR) > ?
+            )
+        ');
+        $stmt->execute([$reservedAt, $durationHours, $reservedAt]);
+        return $stmt->fetchAll();
+    }
+
+    public function findByUser($id){
+        $stmt = $this->connection->prepare("SELECT * FROM tables WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
