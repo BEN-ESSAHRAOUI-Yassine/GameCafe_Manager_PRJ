@@ -4,7 +4,7 @@
         <div class="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]"></div>
     </div>
 
-    <div class="max-w-7xl mx-auto relative z-10">
+    <div class="max-w-7xl relative z-10">
         <div class="mb-12 relative overflow-hidden rounded-xl bg-surface-container-low p-10 border border-outline-variant/15">
             <div class="relative z-10">
                 <div class="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full bg-primary/10 border border-primary/20">
@@ -31,6 +31,7 @@
                         <th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-center">Durée</th>
                         <th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-center">Personnes</th>
                         <th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Statut</th>
+                        <th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-center">Détails</th>
                         <th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-right">Actions</th>
                     </tr>
                 </thead>
@@ -59,6 +60,11 @@
                                 <?php elseif ($reservation['status'] === 'cancelled'): ?>
                                     <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-500 border border-red-500/20">Annulée</span>
                                 <?php endif; ?>
+                            </td>
+                            <td class="px-6 py-6 text-center">
+                                <a href="/reservations/<?= $reservation['id'] ?>" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface-variant hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-lg">visibility</span>
+                                </a>
                             </td>
                             <td class="px-6 py-6 text-right">
                                 <?php if ($reservation['status'] === 'pending'): ?>

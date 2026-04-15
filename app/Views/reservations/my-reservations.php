@@ -1,4 +1,4 @@
-<main class="min-h-screen pt-32 pb-24 px-4 md:px-8 max-w-7xl mx-auto relative overflow-hidden">
+<main class="pt-32 pb-24 px-4 md:px-8 max-w-7xl relative overflow-hidden">
     <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden opacity-20">
         <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-[120px]"></div>
         <div class="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]"></div>
@@ -31,6 +31,7 @@
                         <th class="px-8 py-5 font-bold">Durée</th>
                         <th class="px-8 py-5 font-bold">Personnes</th>
                         <th class="px-8 py-5 font-bold">Statut</th>
+                        <th class="px-8 py-5 font-bold text-right">Détails</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/10">
@@ -62,6 +63,11 @@
                                         Annulée
                                     </span>
                                 <?php endif; ?>
+                            </td>
+                            <td class="px-8 py-6 text-right">
+                                <a href="/reservations/<?= $reservation['id'] ?>" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface-variant hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-lg">visibility</span>
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

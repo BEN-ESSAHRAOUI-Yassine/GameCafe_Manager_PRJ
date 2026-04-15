@@ -1,4 +1,4 @@
-<main class="max-w-4xl mx-auto px-6 py-12 mb-24 relative overflow-hidden">
+<main class="max-w-4xl px-6 py-12 mb-24 relative overflow-hidden">
     <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden opacity-20">
         <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-[120px]"></div>
         <div class="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]"></div>
@@ -65,6 +65,7 @@
                 </div>
             </div>
 
+            <?php if (\Core\Controller::isAdmin()): ?>
             <div class="mt-8 pt-8 border-t border-outline-variant/15 flex flex-col sm:flex-row items-center gap-4">
                 <a href="/games/<?= $game['id'] ?>/edit" class="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 border-2 border-primary-container text-primary-container rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-primary-container hover:text-on-primary transition-all active:scale-95">
                     <span class="material-symbols-outlined text-lg">edit</span>
@@ -77,6 +78,7 @@
                     </button>
                 </form>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </main>
