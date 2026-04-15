@@ -22,7 +22,7 @@ class Controller
     
     protected function redirect(string $url): void
     {
-        header('Location: ' . $url);
+        header('Location: ' . dirname(__DIR__) . $url);
         exit;
     }
     
@@ -34,7 +34,7 @@ class Controller
         exit;
     }
     
-    protected function notFound(): void
+    public function notFound(): void
     {
         http_response_code(404);
         echo '<!DOCTYPE html>
@@ -43,7 +43,7 @@ class Controller
         <body>
             <h1>404 - Page Not Found</h1>
             <p>The page you are looking for does not exist.</p>
-            <a href="/games">Go to Home</a>
+            <a href="/games/index">Go to Home</a>
         </body>
         </html>';
         exit;

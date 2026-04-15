@@ -30,7 +30,7 @@ class AuthController extends Controller {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['role']    = $user['role'];
                 $_SESSION['name']    = $user['name'];
-                $this->redirect($user['role'] === 'admin' ? '/sessions/dashboard' : 'games/index');
+                $this->redirect($user['role'] === 'admin' ? '/sessions/dashboard' : '/home');
             }
             $errors[] = 'Email ou mot de passe incorrect.';
         }
