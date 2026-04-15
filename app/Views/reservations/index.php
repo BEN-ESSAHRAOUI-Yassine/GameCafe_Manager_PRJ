@@ -1,27 +1,37 @@
-<main class="max-w-7xl mx-auto px-8 py-12">
-    <div class="mb-12 relative overflow-hidden rounded-xl bg-surface-container-low p-10 border border-outline-variant/10">
-        <div class="relative z-10">
-            <h1 class="text-5xl font-extrabold tracking-tighter text-on-surface mb-2">Gestion des Réservations</h1>
-            <p class="text-primary text-lg font-medium opacity-80 uppercase tracking-widest">Toutes les réservations</p>
-        </div>
-        <div class="absolute -right-20 -top-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
-        <div class="absolute right-10 bottom-0 opacity-10 pointer-events-none">
-            <span class="material-symbols-outlined !text-[160px]">calendar_today</span>
-        </div>
+<main class="pt-32 pb-24 px-4 md:px-8 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden opacity-20">
+        <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-[120px]"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]"></div>
     </div>
 
-    <div class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/10 shadow-2xl">
+    <div class="max-w-7xl mx-auto relative z-10">
+        <div class="mb-12 relative overflow-hidden rounded-xl bg-surface-container-low p-10 border border-outline-variant/15">
+            <div class="relative z-10">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full bg-primary/10 border border-primary/20">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    <span class="text-xs tracking-widest uppercase text-primary">Réservations</span>
+                </div>
+                <h1 class="text-5xl font-extrabold tracking-tighter text-on-surface mb-2">Gestion des Réservations</h1>
+                <p class="text-on-surface-variant text-lg font-medium opacity-80">Toutes les réservations</p>
+            </div>
+            <div class="absolute -right-20 -top-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
+            <div class="absolute right-10 bottom-0 opacity-10 pointer-events-none">
+                <span class="material-symbols-outlined !text-[160px]">calendar_today</span>
+            </div>
+        </div>
+
+    <div class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/15">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-surface-container-high/50 border-b border-outline-variant/20">
-                        <th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline">Client</th>
-                        <th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline">Table</th>
-                        <th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline">Date &amp; Heure</th>
-                        <th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline text-center">Durée</th>
-                        <th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline text-center">Personnes</th>
-                        <th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline">Statut</th>
-                        <th class="px-6 py-5 text-xs font-black uppercase tracking-widest text-outline text-right">Actions</th>
+                        <th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Client</th>
+                        <th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Table</th>
+                        <th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Date &amp; Heure</th>
+                        <th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-center">Durée</th>
+                        <th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-center">Personnes</th>
+                        <th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Statut</th>
+                        <th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/10">
@@ -41,13 +51,13 @@
                             <td class="px-6 py-6 text-center text-on-surface-variant"><?= $reservation['party_size'] ?? $reservation['people_count'] ?? 1 ?></td>
                             <td class="px-6 py-6">
                                 <?php if ($reservation['status'] === 'pending'): ?>
-                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">En attente</span>
+                                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">En attente</span>
                                 <?php elseif ($reservation['status'] === 'confirmed'): ?>
-                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter bg-blue-500/10 text-blue-400 border border-blue-500/20">Confirmée</span>
+                                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">Confirmée</span>
                                 <?php elseif ($reservation['status'] === 'completed'): ?>
-                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter bg-zinc-500/10 text-zinc-400 border border-zinc-500/20">Complétée</span>
+                                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zinc-500/10 text-zinc-400 border border-zinc-500/20">Complétée</span>
                                 <?php elseif ($reservation['status'] === 'cancelled'): ?>
-                                    <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter bg-red-500/10 text-red-500 border border-red-500/20">Annulée</span>
+                                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-500 border border-red-500/20">Annulée</span>
                                 <?php endif; ?>
                             </td>
                             <td class="px-6 py-6 text-right">
@@ -73,7 +83,7 @@
             </table>
         </div>
         <div class="px-6 py-4 bg-surface-container-high/30 border-t border-outline-variant/10 flex justify-between items-center">
-            <p class="text-xs text-outline font-medium">Affichage de <?= count($reservations) ?> réservations</p>
+            <p class="text-xs text-on-surface-variant font-medium">Affichage de <?= count($reservations) ?> réservations</p>
         </div>
     </div>
 </main>
