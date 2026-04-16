@@ -38,8 +38,9 @@ $router->post('/games/{id}/delete', 'GameController@destroy', ['AdminMiddleware'
 $router->get('/reservations', 'ReservationController@index', ['AdminMiddleware']);
 $router->get('/reservations/create', 'ReservationController@create', ['AuthMiddleware']);
 $router->post('/reservations', 'ReservationController@store', ['AuthMiddleware']);
+$router->get('/reservations/my-reservations', 'ReservationController@mine', ['AuthMiddleware']);
 $router->get('/reservations/my', 'ReservationController@mine', ['AuthMiddleware']);
-$router->get('/reservations/{id}', 'ReservationController@show', ['AdminMiddleware']);
+$router->get('/reservations/{id}', 'ReservationController@show', ['AuthMiddleware']);
 $router->post('/reservations/{id}/status', 'ReservationController@updateStatus', ['AdminMiddleware']);
 $router->post('/reservations/delete', 'ReservationController@delete', ['AdminMiddleware']);
 $router->post('/reservations/available', 'ReservationController@available', ['AuthMiddleware']);
