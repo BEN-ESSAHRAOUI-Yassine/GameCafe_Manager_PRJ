@@ -5,7 +5,7 @@ $basePath = str_replace('\\', '/', $basePath);
 define('BASE_URL', $basePath);
 //define('BASE_URL', '/GameCafe_Manager_PRJ/public');
 
-var_dump(BASE_URL);//C:\xampp\htdocs\
+//var_dump(BASE_URL);//C:\xampp\htdocs\
 //echo "start";
 //ini_set('display_errors', 1);
 //ini_set('display_startup_errors', 1);

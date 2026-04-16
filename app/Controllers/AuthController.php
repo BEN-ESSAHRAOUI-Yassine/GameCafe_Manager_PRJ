@@ -70,8 +70,9 @@ class AuthController extends Controller {
             $this->view('auth/register', ['errors' => $errors]);
             return;
         }
+        $role = User::adminExists() ? 'client' : 'admin';
 
-        User::create(['name' => $name, 'email' => $email, 'phone' => $phone, 'password' => $password]);
+        User::create(['name' => $name, 'email' => $email, 'phone' => $phone, 'password' => $password,'role' => $role]);
         $this->redirect('/login');
     }
 
