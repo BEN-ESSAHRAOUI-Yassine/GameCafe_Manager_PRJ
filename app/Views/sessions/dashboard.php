@@ -1,12 +1,25 @@
 <main class="main-content">
     <div class="page-header">
-        <div class="flex items-center gap-3 mb-2">
+        <div class="flex items-center gap-3 mb-4">
             <span class="dot green"></span>
             <h1 class="page-title">Sessions Actives</h1>
         </div>
-        <p class="page-subtitle">
-            <?= count(array_filter($tables ?? [], fn($t) => ($t['status'] ?? $t['session_id']))) ?? 0 ?> tables · <?= count(array_filter($tables ?? [], fn($t) => ($t['status'] ?? '') === 'occupied')) ?? 0 ?> occupées
-        </p>
+        
+        <!-- Stats Cards -->
+        <div class="stats-bar">
+            <div class="stat-card" style="padding: 1rem 1.5rem; border-left: 3px solid var(--gold);">
+                <p style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Total Tables</p>
+                <p style="font-size: 1.5rem; font-weight: 700;"><?= count($tables ?? []) ?></p>
+            </div>
+            <div class="stat-card" style="padding: 1rem 1.5rem; border-left: 3px solid var(--green);">
+                <p style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Disponibles</p>
+                <p style="font-size: 1.5rem; font-weight: 700; color: var(--green-light);"><?= count(array_filter($tables ?? [], fn($t) => empty($t['session_id']))) ?></p>
+            </div>
+            <div class="stat-card" style="padding: 1rem 1.5rem; border-left: 3px solid var(--red);">
+                <p style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Occupées</p>
+                <p style="font-size: 1.5rem; font-weight: 700; color: var(--red-light);"><?= count(array_filter($tables ?? [], fn($t) => !empty($t['session_id']))) ?></p>
+            </div>
+        </div>
     </div>
 
     <?php if (empty($tables)): ?>

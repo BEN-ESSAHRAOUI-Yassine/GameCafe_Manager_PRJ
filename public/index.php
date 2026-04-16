@@ -39,6 +39,7 @@ $router->get('/reservations', 'ReservationController@index', ['AdminMiddleware']
 $router->get('/reservations/create', 'ReservationController@create', ['AuthMiddleware']);
 $router->post('/reservations', 'ReservationController@store', ['AuthMiddleware']);
 $router->get('/reservations/my', 'ReservationController@mine', ['AuthMiddleware']);
+$router->get('/reservations/{id}', 'ReservationController@show', ['AdminMiddleware']);
 $router->post('/reservations/{id}/status', 'ReservationController@updateStatus', ['AdminMiddleware']);
 $router->post('/reservations/delete', 'ReservationController@delete', ['AdminMiddleware']);
 $router->post('/reservations/available', 'ReservationController@available', ['AuthMiddleware']);

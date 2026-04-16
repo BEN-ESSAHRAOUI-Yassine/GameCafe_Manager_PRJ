@@ -49,7 +49,14 @@ class Reservation
     // ✅ Get reservation by ID
     public function getById($id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+        $sql = "SELECT 
+                    r.*, 
+                    u.name AS client_name,
+                    t.name AS table_name
+                FROM {$this->table} r
+                LEFT JOIN users u ON r.user_id = u.id
+                LEFT JOIN tables t ON r.table_id = t.id
+                WHERE r.id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);

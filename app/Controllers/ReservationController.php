@@ -45,7 +45,7 @@ class ReservationController extends Controller
                 'party_size'     => $_POST['party_size'] ?? 1,
                 'reserved_at'    => $_POST['reserved_at'] ?? null,
                 'duration_hours' => $_POST['duration_hours'] ?? 1,
-                'status'         => 'confirmed'
+                'status'         => 'pending'
             ];
 
             $this->reservationModel->create($data);
@@ -56,7 +56,7 @@ class ReservationController extends Controller
     }
 
     // ✅ Show single reservation
-    public function show($id)
+    public function show($id = null)
     {
         $this->requireLogin();
 
@@ -73,13 +73,13 @@ class ReservationController extends Controller
     }
 
     // ✅ Update status (confirm / cancel)
-    public function updateStatus()
+    public function updateStatus($id = null)
     {
         $this->requireAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            $id     = $_POST['id'] ?? null;
+            // $id comes from URL, status from POST
             $status = $_POST['status'] ?? null;
 
             if ($id && $status) {
