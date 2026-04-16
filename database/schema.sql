@@ -56,6 +56,19 @@ CREATE TABLE reservations (
 );
 
 
+
+
+-- 6. game_copies
+CREATE TABLE game_copies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    game_id INT NOT NULL,
+    copy_number INT NOT NULL,
+    status ENUM('available', 'in_use') DEFAULT 'available',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (game_id)
+    REFERENCES games(id)
+    ON DELETE CASCADE
+);
 -- 5. sessions
 CREATE TABLE sessions (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -71,23 +84,5 @@ CREATE TABLE sessions (
   FOREIGN KEY (game_copy_id) REFERENCES game_copies(id),
   FOREIGN KEY (table_id) REFERENCES tables(id)
 );
-
--- 6. game_copies
-CREATE TABLE game_copies (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-
-    game_id INT NOT NULL,
-
-    copy_number INT NOT NULL,
-
-    status ENUM('available', 'in_use') DEFAULT 'available',
-
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (game_id)
-    REFERENCES games(id)
-    ON DELETE CASCADE
-);
-
 
 

@@ -19,7 +19,8 @@
             <a href="<?= BASE_URL ?>/games" class="nav-link">Jeux</a>
             <?php if (\Core\Controller::isAdmin()): ?>
                 <a href="<?= BASE_URL ?>/reservations" class="nav-link">Réservations</a>
-                <a href="<?= BASE_URL ?>/sessions/dashboard" class="nav-link">Sessions</a>
+                <a href="<?= BASE_URL ?>/sessions/dashboard" class="nav-link">Sessions Dashboard</a>
+                <a href="<?= BASE_URL ?>/sessions/history" class="nav-link">Sessions History</a>
             <?php elseif (\Core\Controller::isLoggedIn()): ?>
                 <a href="<?= BASE_URL ?>/reservations/my" class="nav-link">Mes Réservations</a>
             <?php endif; ?>
