@@ -1,6 +1,6 @@
 <main class="main-content">
-    <div class="page-header">
-        <header style="display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="page-header" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; flex-direction: column; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 1rem;">
             <div>
                 <div class="stat-chip" style="margin-bottom: 1rem;">
                     <span class="dot gold"></span>
@@ -13,7 +13,8 @@
                 <span class="material-icons">add_circle</span>
                 Nouvelle Réservation
             </a>
-        </header>
+        </div>
+    </div>
 
     <?php if (!empty($reservations)): ?>
         <div class="table-container">
@@ -37,16 +38,17 @@
                                     <?= htmlspecialchars($reservation['table_name'] ?? $reservation['table_id']) ?>
                                 </span>
                             </td>
-                            <td class="text-center"><?= $reservation['duration_hours'] ?? $reservation['duration'] ?>h</td>
-                            <td class="text-center"><?= $reservation['party_size'] ?? $reservation['people_count'] ?></td>
+                            <td class="text-center"><?= $reservation['duration_hours'] ?? $reservation['duration'] ?? 1 ?>h</td>
+                            <td class="text-center"><?= $reservation['party_size'] ?? $reservation['people_count'] ?? 1 ?></td>
                             <td>
-                                <?php if (($reservation['status'] ?? $reservation['reservation_status']) === 'pending'): ?>
+                                <?php $status = $reservation['status'] ?? $reservation['reservation_status'] ?? 'pending'; ?>
+                                <?php if ($status === 'pending'): ?>
                                     <span class="badge badge-warning">En attente</span>
-                                <?php elseif (($reservation['status'] ?? $reservation['reservation_status']) === 'confirmed'): ?>
+                                <?php elseif ($status === 'confirmed'): ?>
                                     <span class="badge badge-info">Confirmée</span>
-                                <?php elseif (($reservation['status'] ?? $reservation['reservation_status']) === 'completed'): ?>
+                                <?php elseif ($status === 'completed'): ?>
                                     <span class="badge badge-success">Complétée</span>
-                                <?php elseif (($reservation['status'] ?? $reservation['reservation_status']) === 'cancelled'): ?>
+                                <?php elseif ($status === 'cancelled'): ?>
                                     <span class="badge badge-danger">Annulée</span>
                                 <?php endif; ?>
                             </td>
@@ -67,11 +69,6 @@
             </div>
             <h3 class="empty-title">Aucune réservation</h3>
             <p class="empty-text">Réservez votre première table</p>
-            <a href="<?= BASE_URL ?>/reservations/create" class="btn btn-primary">
-                <span class="material-icons">add</span>
-                Nouvelle Réservation
-            </a>
         </div>
     <?php endif; ?>
-    </div>
 </main>

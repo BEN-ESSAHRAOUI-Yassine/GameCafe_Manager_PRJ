@@ -30,7 +30,7 @@ class SessionController extends Controller {
             AND r.id NOT IN (SELECT reservation_id FROM sessions WHERE ended_at IS NULL)
         ');
         $reservations = $stmt->fetchAll();
-        $games        = Game::allByStatus('available');
+        $games = Game::allWithAvailability();
 
         $this->view('sessions/create', [
             'reservations' => $reservations,
@@ -41,19 +41,26 @@ class SessionController extends Controller {
     // POST /sessions
     public function store(): void {
         $this->requireAdmin();
-
+        
+        $reservationId = (int) $this->post('reservation_id');
+        $gameId = (int) $this->post('game_id');
+        
+        // Get table_id from reservation
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare("SELECT table_id FROM reservations WHERE id = ?");
+        $stmt->execute([$reservationId]);
+        $reservation = $stmt->fetch();
+        $tableId = (int) $reservation['table_id'];
+        
         Session::create([
-            'reservation_id' => (int) $this->post('reservation_id'),
-            'game_id'        => (int) $this->post('game_id'),
-            'table_id'       => (int) $this->post('table_id'),
+            'reservation_id' => $reservationId,
+            'game_id'       => $gameId,
+            'table_id'     => $tableId,
         ]);
 
-        $pdo = Database::connect();
         $pdo->prepare("UPDATE tables SET status = 'occupied' WHERE id = ?")
-            ->execute([(int) $this->post('table_id')]);
-        $pdo->prepare("UPDATE games SET status = 'in_use' WHERE id = ?")
-            ->execute([(int) $this->post('game_id')]);
-
+            ->execute([$tableId]);
+        
         $this->redirect('/sessions/dashboard');
     }
 
