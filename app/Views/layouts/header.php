@@ -1,33 +1,33 @@
 <!DOCTYPE html>
-<html class="dark" lang="fr">
+<html lang="fr">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/css/Style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <title>Aji L3bo Café - <?= $pageTitle ?? 'Gestion' ?></title>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <script src="<?= BASE_URL ?>/js/app.js" defer></script>
 </head>
-<body class="bg-surface text-on-surface font-body min-h-screen flex flex-col">
-    <header class="fixed top-0 left-0 w-full z-50 bg-surface-dim/80 backdrop-blur-xl border-b border-outline-variant/10">
-        <div class="flex items-center justify-between w-full px-4 md:px-12 py-4">
-            <a href="<?= BASE_URL ?>/" class="flex items-center gap-2">
-                <span class="text-xl">🎲</span>
-                <span class="font-headline font-bold text-lg tracking-tight text-primary">Aji L3bo Café</span>
-            </a>
-            <nav class="flex items-center gap-6">
-                <a href="<?= BASE_URL ?>/games" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Jeux</a>
-                <?php if (\Core\Controller::isAdmin()): ?>
-                    <a href="<?= BASE_URL ?>/reservations" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Réservations</a>
-                    <a href="<?= BASE_URL ?>/sessions/dashboard" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Session Dashboard</a>
-                <?php elseif (\Core\Controller::isLoggedIn()): ?>
-                    <a href="<?= BASE_URL ?>/reservations/my" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Mes Réservations</a>
-                <?php endif; ?>
-                <?php if (\Core\Controller::isLoggedIn()): ?>
-                    <a href="<?= BASE_URL ?>/logout" class="text-on-surface-variant hover:text-error transition-colors font-medium">Déconnexion</a>
-                <?php else: ?>
-                    <a href="<?= BASE_URL ?>/login" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Connexion</a>
-                <?php endif; ?>
-            </nav>
+<body>
+    <nav class="navbar">
+        <a href="<?= BASE_URL ?>/" class="navbar-brand">
+            <span class="navbar-logo material-icons">casino</span>
+            <span class="navbar-title">Aji L3bo Café</span>
+        </a>
+        <div class="navbar-nav">
+            <a href="<?= BASE_URL ?>/games" class="nav-link">Jeux</a>
+            <?php if (\Core\Controller::isAdmin()): ?>
+                <a href="<?= BASE_URL ?>/reservations" class="nav-link">Réservations</a>
+                <a href="<?= BASE_URL ?>/sessions/dashboard" class="nav-link">Sessions</a>
+            <?php elseif (\Core\Controller::isLoggedIn()): ?>
+                <a href="<?= BASE_URL ?>/reservations/my" class="nav-link">Mes Réservations</a>
+            <?php endif; ?>
+            <?php if (\Core\Controller::isLoggedIn()): ?>
+                <a href="<?= BASE_URL ?>/logout" class="nav-link btn-danger">Déconnexion</a>
+            <?php else: ?>
+                <a href="<?= BASE_URL ?>/login" class="nav-link btn-primary">Connexion</a>
+            <?php endif; ?>
         </div>
-    </header>
-    <div class="h-20"></div>
+    </nav>
+    <div class="navbar-spacer"></div>

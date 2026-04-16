@@ -26,11 +26,12 @@ $router->get('/logout', 'AuthController@logout', ['AuthMiddleware']);
 
 // GAMES
 $router->get('/games', 'GameController@index', ['AuthMiddleware']);
-$router->get('/games/{id}', 'GameController@show', ['AuthMiddleware']);
 $router->get('/games/create', 'GameController@create', ['AdminMiddleware']);
 $router->post('/games', 'GameController@store', ['AdminMiddleware']);
+$router->get('/games/{id}', 'GameController@show', ['AuthMiddleware']);
 $router->get('/games/{id}/edit', 'GameController@edit', ['AdminMiddleware']);
 $router->post('/games/{id}/update', 'GameController@update', ['AdminMiddleware']);
+$router->post('/games/{id}/add-copy', 'GameController@addCopy', ['AdminMiddleware']);
 $router->post('/games/{id}/delete', 'GameController@destroy', ['AdminMiddleware']);
 
 // RESERVATIONS

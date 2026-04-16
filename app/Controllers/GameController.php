@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Game;
+use App\Models\GameCopy;
 use Core\Controller;
 
 class GameController extends Controller {
@@ -12,9 +13,22 @@ class GameController extends Controller {
         $validCategories = ['Stratégie', 'Ambiance', 'Famille', 'Experts'];
 
         if ($category && in_array($category, $validCategories)) {
-            $games = Game::allByCategory($category);
+            $pdo = \Core\Database::connect();
+            $stmt = $pdo->prepare('
+                SELECT 
+                    g.*,
+                    COALESCE(COUNT(c.id), 0) as total_copies,
+                    COALESCE(SUM(CASE WHEN c.status = "available" THEN 1 ELSE 0 END), 0) as available_copies
+                FROM games g
+                LEFT JOIN game_copies c ON g.id = c.game_id
+                WHERE g.category = ?
+                GROUP BY g.id
+                ORDER BY g.name ASC
+            ');
+            $stmt->execute([$category]);
+            $games = $stmt->fetchAll();
         } else {
-            $games = Game::all();
+            $games = Game::allWithAvailability();
             $category = null;
         }
 
@@ -22,7 +36,7 @@ class GameController extends Controller {
     }
 
     public function show(int $id): void {
-        $game = Game::find($id);
+        $game = Game::findWithAvailability($id);
         if (!$game) {
             $this->notFound();
             return;
@@ -44,6 +58,7 @@ class GameController extends Controller {
         $difficulty = (int) $this->post('difficulty', 0);
         $minPlayers = (int) $this->post('min_players', 0);
         $maxPlayers = (int) $this->post('max_players', 0);
+        $copies = (int) $this->post('copies', 1);
 
         if (empty($name))
             $errors[] = 'Nom obligatoire.';
@@ -53,28 +68,47 @@ class GameController extends Controller {
             $errors[] = 'Difficulté doit être entre 1 et 5.';
         if ($minPlayers < 1 || $maxPlayers < $minPlayers)
             $errors[] = 'Nombre de joueurs invalide.';
+        if ($copies < 1)
+            $errors[] = 'Nombre d\'exemplaires invalide.';
 
         if (!empty($errors)) {
             $this->view('games/create', ['errors' => $errors]);
             return;
         }
 
-        Game::insert([
-            'name'             => $name,
-            'category'         => $category,
-            'description'      => $this->post('description', ''),
-            'difficulty'       => $difficulty,
-            'min_players'      => $minPlayers,
-            'max_players'      => $maxPlayers,
-            'duration_minutes' => (int) $this->post('duration_minutes', 0),
-        ]);
+        $pdo = \Core\Database::connect();
+        $pdo->beginTransaction();
+
+        try {
+            $stmt = $pdo->prepare('
+                INSERT INTO games (name, category, description, difficulty, min_players, max_players, duration_minutes)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ');
+            $stmt->execute([
+                $name, $category, $this->post('description', ''),
+                $difficulty, $minPlayers, $maxPlayers, (int) $this->post('duration_minutes', 0),
+            ]);
+            $gameId = (int) $pdo->lastInsertId();
+
+            $copyStmt = $pdo->prepare('INSERT INTO game_copies (game_id, copy_number, status) VALUES (?, ?, ?)');
+            for ($i = 1; $i <= $copies; $i++) {
+                $copyStmt->execute([$gameId, $i, 'available']);
+            }
+
+            $pdo->commit();
+        } catch (\Exception $e) {
+            $pdo->rollBack();
+            $errors[] = 'Erreur lors de la création du jeu.';
+            $this->view('games/create', ['errors' => $errors]);
+            return;
+        }
 
         $this->redirect('/games');
     }
 
     public function edit(int $id): void {
         $this->requireAdmin();
-        $game = Game::find($id);
+        $game = Game::findWithAvailability($id);
         if (!$game) $this->notFound();
         $this->view('games/edit', ['game' => $game]);
     }
@@ -121,5 +155,32 @@ class GameController extends Controller {
         $this->requireAdmin();
         Game::delete($id);
         $this->redirect('/games');
+    }
+
+    public function addCopy(int $id): void {
+        $this->requireAdmin();
+        
+        // Support both GET and POST
+        $copies = (int) ($this->post('copies') ?? $this->get('copies', 1));
+
+        if ($copies < 1) {
+            $_SESSION['error'] = 'Nombre d\'exemplaires invalide.';
+            $this->redirect('/games/' . $id . '/edit');
+            return;
+        }
+
+        $game = Game::find($id);
+        if (!$game) {
+            $this->notFound();
+            return;
+        }
+
+        $nextCopyNumber = GameCopy::getNextCopyNumber($id);
+        for ($i = 0; $i < $copies; $i++) {
+            GameCopy::create($id, $nextCopyNumber + $i);
+        }
+
+        $_SESSION['success'] = $copies . ' exemplaire(s) ajouté(s).';
+        $this->redirect('/games/' . $id . '/edit');
     }
 }
