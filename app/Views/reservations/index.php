@@ -20,6 +20,7 @@
             <table class="data-table">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Client</th>
                         <th>Table</th>
                         <th>Date</th>
@@ -34,6 +35,9 @@
                     <?php foreach ($reservations as $reservation): ?>
                         <tr>
                             <td>
+                                <span style="font-family: monospace; color: var(--text-muted);">#<?= $reservation['id'] ?></span>
+                            </td>
+                            <td>
                                 <div class="table-user">
                                     <div class="table-user-avatar">
                                         <?= strtoupper(substr($reservation['client_name'] ?? $reservation['user_name'] ?? 'U', 0, 2)) ?>
@@ -42,9 +46,30 @@
                                 </div>
                             </td>
                             <td>
-                                <span style="padding: 0.25rem 0.5rem; background: var(--bg-card-hover); border-radius: var(--radius-sm); font-size: 0.8125rem;">
-                                    <?= htmlspecialchars($reservation['table_name'] ?? $reservation['table'] ?? $reservation['table_id']) ?>
-                                </span>
+                                <?php
+                                $reservedAt = $reservation['reserved_at'];
+                                $duration = $reservation['duration_hours'] ?? 1;
+                                $currentTableId = $reservation['table_id'];
+                                $availableTables = \App\Models\Reservation::getAvailableTables($reservedAt, $duration);
+                                $availableIds = array_column($availableTables, 'id');
+                                $availableIds[] = $currentTableId;
+                                $availableIds = array_unique($availableIds);
+                                ?>
+                                <form method="POST" action="<?= BASE_URL ?>/reservations/<?= $reservation['id'] ?>/table" style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <select name="table_id" class="form-select" style="width: auto; min-width: 120px; padding: 0.375rem 2rem 0.375rem 0.5rem; font-size: 0.8125rem;">
+                                        <?php foreach ($tables as $table): ?>
+                                            <option value="<?= $table['id'] ?>" <?= $table['id'] == $currentTableId ? 'selected' : '' ?> <?= !in_array($table['id'], $availableIds) ? 'disabled' : '' ?>>
+                                                <?= htmlspecialchars($table['name']) ?>
+                                                <?php if (!in_array($table['id'], $availableIds)): ?>
+                                                    (occupée)
+                                                <?php endif; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <button type="submit" class="btn btn-ghost btn-sm" title="Changer de table">
+                                        <span class="material-icons">cached</span>
+                                    </button>
+                                </form>
                             </td>
                             <td><?= htmlspecialchars(date('d/m/Y H:i', strtotime($reservation['reserved_at'] ?? $reservation['date']))) ?></td>
                             <td class="text-center"><?= $reservation['duration_hours'] ?? $reservation['duration'] ?? 1 ?>h</td>

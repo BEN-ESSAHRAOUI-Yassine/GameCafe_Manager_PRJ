@@ -6,6 +6,7 @@ use Core\Controller;
 use Core\Database;
 use App\Models\Session;
 use App\Models\Game;
+use App\Models\GameCopy;
 
 class SessionController extends Controller {
 
@@ -31,19 +32,22 @@ class SessionController extends Controller {
         ');
         $reservations = $stmt->fetchAll();
         $games = Game::allWithAvailability();
+        $gameCopies = GameCopy::getAvailableWithGame();
 
         $this->view('sessions/create', [
             'reservations' => $reservations,
             'games'        => $games,
+            'gameCopies'   => $gameCopies,
         ]);
     }
 
-    // POST /sessions
+// POST /sessions
     public function store(): void {
         $this->requireAdmin();
         
         $reservationId = (int) $this->post('reservation_id');
         $gameId = (int) $this->post('game_id');
+        $gameCopyId = (int) $this->post('game_copy_id') ?: null;
         
         // Get table_id from reservation
         $pdo = Database::connect();
@@ -55,9 +59,14 @@ class SessionController extends Controller {
         Session::create([
             'reservation_id' => $reservationId,
             'game_id'       => $gameId,
-            'table_id'     => $tableId,
+            'game_copy_id'  => $gameCopyId,
+            'table_id'      => $tableId,
         ]);
 
+        if ($gameCopyId) {
+            GameCopy::updateStatus($gameCopyId, 'in_use');
+        }
+        
         $pdo->prepare("UPDATE tables SET status = 'occupied' WHERE id = ?")
             ->execute([$tableId]);
         
@@ -76,8 +85,11 @@ class SessionController extends Controller {
         $pdo = Database::connect();
         $pdo->prepare("UPDATE tables SET status = 'available' WHERE id = ?")
             ->execute([$session['table_id']]);
-        $pdo->prepare("UPDATE games SET status = 'available' WHERE id = ?")
-            ->execute([$session['game_id']]);
+        
+        if ($session['game_copy_id']) {
+            GameCopy::updateStatus($session['game_copy_id'], 'available');
+        }
+        
         $pdo->prepare("UPDATE reservations SET status = 'completed' WHERE id = ?")
             ->execute([$session['reservation_id']]);
 

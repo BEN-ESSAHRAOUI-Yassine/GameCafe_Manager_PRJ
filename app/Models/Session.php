@@ -9,11 +9,12 @@ class Session {
     public static function getActive(): array {
         $pdo  = Database::connect();
         $stmt = $pdo->query('
-            SELECT s.*, g.name AS game_name, t.name AS table_name,
+            SELECT s.*, g.name AS game_name, gc.copy_number AS game_copy_number, t.name AS table_name,
                    u.name AS client_name, r.duration_hours,
                    TIMESTAMPDIFF(MINUTE, s.started_at, NOW()) AS elapsed_minutes
             FROM sessions s
             JOIN games g        ON s.game_id = g.id
+            LEFT JOIN game_copies gc ON s.game_copy_id = gc.id
             JOIN tables t       ON s.table_id = t.id
             JOIN reservations r ON s.reservation_id = r.id
             JOIN users u        ON r.user_id = u.id
@@ -42,12 +43,13 @@ class Session {
     public static function create(array $data): bool {
         $pdo  = Database::connect();
         $stmt = $pdo->prepare('
-            INSERT INTO sessions (reservation_id, game_id, table_id, started_at)
-            VALUES (?, ?, ?, NOW())
+            INSERT INTO sessions (reservation_id, game_id, game_copy_id, table_id, started_at)
+            VALUES (?, ?, ?, ?, NOW())
         ');
         return $stmt->execute([
             $data['reservation_id'],
             $data['game_id'],
+            $data['game_copy_id'] ?? null,
             $data['table_id'],
         ]);
     }
@@ -67,11 +69,12 @@ class Session {
     public static function getAll(): array {
         $pdo  = Database::connect();
         $stmt = $pdo->query('
-            SELECT s.*, g.name AS game_name, t.name AS table_name,
+            SELECT s.*, g.name AS game_name, gc.copy_number AS game_copy_number, t.name AS table_name,
                 u.name AS client_name,
                 TIMESTAMPDIFF(MINUTE, s.started_at, s.ended_at) AS duration_minutes
             FROM sessions s
             JOIN games g        ON s.game_id = g.id
+            LEFT JOIN game_copies gc ON s.game_copy_id = gc.id
             JOIN tables t       ON s.table_id = t.id
             JOIN reservations r ON s.reservation_id = r.id
             JOIN users u        ON r.user_id = u.id

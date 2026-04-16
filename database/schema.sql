@@ -61,12 +61,14 @@ CREATE TABLE sessions (
   id INT PRIMARY KEY AUTO_INCREMENT,
   reservation_id INT NOT NULL,
   game_id INT NOT NULL,
+  game_copy_id INT,
   table_id INT NOT NULL,
   started_at DATETIME NOT NULL,
   ended_at DATETIME DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (reservation_id) REFERENCES reservations(id),
   FOREIGN KEY (game_id) REFERENCES games(id),
+  FOREIGN KEY (game_copy_id) REFERENCES game_copies(id),
   FOREIGN KEY (table_id) REFERENCES tables(id)
 );
 
