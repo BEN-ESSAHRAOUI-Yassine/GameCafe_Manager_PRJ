@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Reservation;
+use App\Models\Table;
 use Core\Controller;
 class ReservationController extends Controller
 {
@@ -19,9 +20,12 @@ class ReservationController extends Controller
         $this->requireAdmin();
 
         $reservations = $this->reservationModel->getWithDetails();
+        $tableModel = new Table();
+        $tables = $tableModel->getAll();
 
         $this->view('reservations/index', [
-            'reservations' => $reservations
+            'reservations' => $reservations,
+            'tables' => $tables
         ]);
     }
 
@@ -84,6 +88,38 @@ class ReservationController extends Controller
 
             if ($id && $status) {
                 $this->reservationModel->updateStatus($id, $status);
+            }
+
+            $this->redirect('/reservations');
+        }
+    }
+
+    // ✅ Update table assignment
+    public function updateTable($id = null)
+    {
+        $this->requireAdmin();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $tableId = $_POST['table_id'] ?? null;
+
+            if ($id && $tableId) {
+                $reservation = $this->reservationModel->getById($id);
+                
+                if ($reservation) {
+                    $availableTables = Reservation::getAvailableTables(
+                        $reservation['reserved_at'],
+                        $reservation['duration_hours']
+                    );
+                    
+                    $tableIds = array_column($availableTables, 'id');
+                    $tableIds[] = $reservation['table_id'];
+                    $tableIds = array_unique($tableIds);
+                    
+                    if (in_array($tableId, $tableIds)) {
+                        $this->reservationModel->updateTable($id, $tableId);
+                    }
+                }
             }
 
             $this->redirect('/reservations');

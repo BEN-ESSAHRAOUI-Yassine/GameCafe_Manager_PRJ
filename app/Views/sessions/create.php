@@ -42,12 +42,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="game_id">Jeu</label>
-                    <select id="game_id" name="game_id" class="form-select">
-                        <?php foreach ($games ?? $availableGames ?? [] as $game): ?>
-                            <option value="<?= $game['id'] ?>"><?= htmlspecialchars($game['name']) ?> (<?= htmlspecialchars($game['category']) ?> · <?= $game['min_players'] ?>-<?= $game['max_players'] ?> joueurs)</option>
+                    <label class="form-label" for="game_copy_id">Jeu (Copie)</label>
+                    <select id="game_copy_id" name="game_copy_id" class="form-select">
+                        <option value="">-- Sélectionner une copie --</option>
+                        <?php foreach ($gameCopies ?? [] as $copy): ?>
+                            <option value="<?= $copy['id'] ?>" data-game-id="<?= $copy['game_id'] ?>">
+                                <?= htmlspecialchars($copy['game_name']) ?> — Copy #<?= $copy['copy_number'] ?> (ID: <?= $copy['id'] ?>)
+                            </option>
                         <?php endforeach; ?>
                     </select>
+                    <input type="hidden" name="game_id" id="game_id" value="">
                 </div>
 
                 <?php if (!empty($_SESSION['csrf_token'])): ?>
@@ -64,6 +68,16 @@
                     </a>
                 </div>
             </form>
+            <script>
+                document.getElementById('game_copy_id').addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (this.value) {
+                        document.getElementById('game_id').value = selectedOption.getAttribute('data-game-id');
+                    } else {
+                        document.getElementById('game_id').value = '';
+                    }
+                });
+            </script>
         <?php endif; ?>
     </div>
 </main>

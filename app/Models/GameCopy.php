@@ -58,6 +58,18 @@ class GameCopy {
         return $stmt->fetchAll();
     }
 
+    public static function getAvailableWithGame(): array {
+        $pdo = Database::connect();
+        $stmt = $pdo->query('
+            SELECT gc.*, g.name AS game_name
+            FROM game_copies gc
+            JOIN games g ON gc.game_id = g.id
+            WHERE gc.status = "available"
+            ORDER BY g.name ASC, gc.copy_number ASC
+        ');
+        return $stmt->fetchAll();
+    }
+
     public static function updateStatus(int $id, string $status): bool {
         $pdo = Database::connect();
         $stmt = $pdo->prepare('UPDATE game_copies SET status = ? WHERE id = ?');

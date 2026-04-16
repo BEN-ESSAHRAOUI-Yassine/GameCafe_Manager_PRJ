@@ -93,6 +93,21 @@ class Reservation
         ]);
     }
 
+    // ✅ Update table assignment
+    public function updateTable($id, $tableId)
+    {
+        $sql = "UPDATE {$this->table} 
+                SET table_id = :table_id 
+                WHERE id = :id";
+
+        $stmt = $this->connection->prepare($sql);
+
+        return $stmt->execute([
+            ':table_id' => $tableId,
+            ':id' => $id
+        ]);
+    }
+
     // ✅ Delete reservation
     public function delete($id)
     {
