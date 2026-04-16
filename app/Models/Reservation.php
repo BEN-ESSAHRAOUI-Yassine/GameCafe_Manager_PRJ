@@ -26,6 +26,8 @@ class Reservation
 
         $stmt = $this->connection->prepare($sql);
 
+        echo 'this is a table_id' . $data['table_id'];
+
         return $stmt->execute([
             ':user_id' => $data['user_id'],
             ':table_id' => $data['table_id'],
@@ -110,8 +112,18 @@ class Reservation
     }
 
     public function findByUser($id){
-        $stmt = $this->connection->prepare("SELECT * FROM tables WHERE user_id = ?");
+        $sql = "SELECT 
+                    r.*, 
+                    u.name AS user_name,
+                    t.name AS table_name
+                FROM reservations r
+                JOIN users u ON r.user_id = u.id
+                JOIN tables t ON r.table_id = t.id
+                WHERE r.user_id = ?";
+
+        $stmt = $this->connection->prepare($sql);
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

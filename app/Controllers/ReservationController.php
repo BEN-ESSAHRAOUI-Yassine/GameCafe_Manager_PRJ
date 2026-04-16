@@ -34,14 +34,14 @@ class ReservationController extends Controller
     }
 
     // ✅ Store new reservation (POST)
-    public function store()
+    public function store() 
     {
         $this->requireLogin();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $data = [
                 'user_id'        => $this->getUserId(), // ✅ NEVER trust POST user_id
-                'table_id'       => $_POST['table_id'] ?? null,
+                'table_id'       => $_POST['table_id'] ?? 1, // add number of table 
                 'party_size'     => $_POST['party_size'] ?? 1,
                 'reserved_at'    => $_POST['reserved_at'] ?? null,
                 'duration_hours' => $_POST['duration_hours'] ?? 1,
