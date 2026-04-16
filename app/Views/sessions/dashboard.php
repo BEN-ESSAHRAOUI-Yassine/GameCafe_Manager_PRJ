@@ -19,6 +19,28 @@
                 <p style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Occupées</p>
                 <p style="font-size: 1.5rem; font-weight: 700; color: var(--red-light);"><?= count(array_filter($tables ?? [], fn($t) => !empty($t['session_id']))) ?></p>
             </div>
+            <div class="stat-card" style="padding: 1rem 1.5rem; border-left: 3px solid var(--gold);">
+                <p style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Jeu le plus joué</p>
+                <p style="font-size: 1.5rem; font-weight: 700;"><?= $mostPlayed[0]['name'] ?? 'N/A' ?></p>
+                <small style="color: var(--text-muted);"><?= $mostPlayed[0]['total_sessions'] ?? 0 ?> sessions</small>
+            </div>
+            <div class="stat-card" style="padding: 1rem 1.5rem; border-left: 3px solid var(--gold);">
+                <p style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Heure de pointe</p>
+                <p style="font-size: 1.5rem; font-weight: 700;"><?= isset($peakHours[0]['hour']) ? $peakHours[0]['hour'] . ':00' : 'N/A' ?></p>
+            </div>
+            <div class="stat-card" style="padding: 1rem 1.5rem; border-left: 3px solid var(--gold);">
+                <p style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Table la plus utilisée</p>
+                <p style="font-size: 1.5rem; font-weight: 700;"><?= $tableUsage[0]['name'] ?? 'N/A' ?></p>
+                <small style="color: var(--text-muted);"><?= $tableUsage[0]['total_minutes'] ?? 0 ?> min</small>
+            </div>
+            <div class="stat-card" style="padding: 1rem 1.5rem; border-left: 3px solid var(--gold);">
+                <p style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Catégorie populaire</p>
+                <p style="font-size: 1.5rem; font-weight: 700;"><?= $categories[0]['category'] ?? 'N/A' ?></p>
+            </div>
+            <div class="stat-card" style="padding: 1rem 1.5rem; border-left: 3px solid var(--gold);">
+                <p style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Jeu recommandé</p>
+                <p style="font-size: 1.5rem; font-weight: 700;"><?= $recommended[0]['name'] ?? 'N/A' ?></p>
+            </div>
         </div>
     </div>
 

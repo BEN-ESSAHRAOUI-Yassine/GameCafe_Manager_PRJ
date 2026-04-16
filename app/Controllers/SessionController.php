@@ -13,8 +13,22 @@ class SessionController extends Controller {
     // GET /sessions/dashboard
     public function dashboard(): void {
         $this->requireAdmin();
+
         $tables = Session::getAllTablesWithStatus();
-        $this->view('sessions/dashboard', ['tables' => $tables]);
+
+        // 📊 Stats
+        $mostPlayed   = Session::getMostPlayedGames();
+        $peakHours    = Session::getPeakHours();
+        $tableUsage   = Session::getTableUsage();
+        $categories   = Session::getCategoryStats();
+
+        $this->view('sessions/dashboard', [
+            'tables'      => $tables,
+            'mostPlayed'  => $mostPlayed,
+            'peakHours'   => $peakHours,
+            'tableUsage'  => $tableUsage,
+            'categories'  => $categories,
+        ]);
     }
 
     // GET /sessions/create

@@ -83,4 +83,89 @@ class Session {
         ');
         return $stmt->fetchAll();
     }
+
+    public static function getMostPlayedGames(): array {
+        $pdo = Database::connect();
+
+        $stmt = $pdo->prepare('
+            SELECT g.name, COUNT(*) AS total_sessions
+            FROM sessions s
+            JOIN games g ON s.game_id = g.id
+            GROUP BY s.game_id
+            ORDER BY total_sessions DESC
+            LIMIT 5
+        ');
+
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public static function getPeakHours(): array {
+        $pdo = Database::connect();
+
+        $stmt = $pdo->prepare('
+            SELECT HOUR(s.started_at) AS hour, COUNT(*) AS total_sessions
+            FROM sessions s
+            GROUP BY hour
+            ORDER BY total_sessions DESC
+        ');
+
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public static function getTableUsage(): array {
+        $pdo = Database::connect();
+
+        $stmt = $pdo->prepare('
+            SELECT 
+                t.name,
+                SUM(TIMESTAMPDIFF(MINUTE, s.started_at, s.ended_at)) AS total_minutes
+            FROM sessions s
+            JOIN tables t ON s.table_id = t.id
+            WHERE s.ended_at IS NOT NULL
+            GROUP BY s.table_id
+            ORDER BY total_minutes DESC
+        ');
+
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public static function getCategoryStats(): array {
+        $pdo = Database::connect();
+
+        $stmt = $pdo->prepare('
+            SELECT 
+                g.category,
+                COUNT(*) AS total_sessions
+            FROM sessions s
+            JOIN games g ON s.game_id = g.id
+            GROUP BY g.category
+            ORDER BY total_sessions DESC
+        ');
+
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public static function getRecommendedGames(): array {
+        $pdo = Database::connect();
+
+        $stmt = $pdo->prepare('
+            SELECT 
+                g.id,
+                g.name,
+                g.category,
+                COUNT(s.id) AS total_sessions
+            FROM games g
+            LEFT JOIN sessions s ON g.id = s.game_id
+            GROUP BY g.id
+            ORDER BY total_sessions DESC
+            LIMIT 5
+        ');
+
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }
