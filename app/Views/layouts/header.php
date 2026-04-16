@@ -18,8 +18,9 @@
                 <a href="<?= BASE_URL ?>/games" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Jeux</a>
                 <?php if (\Core\Controller::isAdmin()): ?>
                     <a href="<?= BASE_URL ?>/reservations" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Réservations</a>
+                    <a href="<?= BASE_URL ?>/sessions/dashboard" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Session Dashboard</a>
                 <?php elseif (\Core\Controller::isLoggedIn()): ?>
-                    <a href="<?= BASE_URL ?>/reservations/my-reservations" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Mes Réservations</a>
+                    <a href="<?= BASE_URL ?>/reservations/my" class="text-on-surface-variant hover:text-primary transition-colors font-medium">Mes Réservations</a>
                 <?php endif; ?>
                 <?php if (\Core\Controller::isLoggedIn()): ?>
                     <a href="<?= BASE_URL ?>/logout" class="text-on-surface-variant hover:text-error transition-colors font-medium">Déconnexion</a>
