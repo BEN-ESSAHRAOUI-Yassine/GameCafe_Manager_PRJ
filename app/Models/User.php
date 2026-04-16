@@ -17,13 +17,14 @@ class User {
         $pdo = Database::connect();
         $stmt = $pdo->prepare('
             INSERT INTO users (name, email, phone, password, role)
-            VALUES (?, ?, ?, ?, "client")
+            VALUES (?, ?, ?, ?, ?)
         ');
         return $stmt->execute([
             $data['name'],
             $data['email'],
             $data['phone'],
             password_hash($data['password'], PASSWORD_BCRYPT),
+            $data['role'],
         ]);
     }
 
@@ -32,5 +33,12 @@ class User {
         $stmt = $pdo->prepare('SELECT * FROM users WHERE id = ?');
         $stmt->execute([$id]);
         return $stmt->fetch();
+    }
+
+    public function adminExists() {
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE role='admin'");
+        $stmt->execute();
+        return $stmt->fetchColumn() > 0;
     }
 }
