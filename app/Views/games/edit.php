@@ -1,87 +1,103 @@
-<main class="flex-grow flex items-center justify-center pt-24 pb-12 px-4 relative overflow-hidden">
-    <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden opacity-20">
-        <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-[120px]"></div>
-        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]"></div>
-    </div>
-
-    <div class="w-full max-w-2xl bg-surface-container-low p-8 md:p-12 rounded-xl border border-outline-variant/15 relative z-10">
-        <div class="mb-10 text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full bg-primary/10 border border-primary/20">
-                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                <span class="text-xs tracking-widest uppercase text-primary">Jeux</span>
+<main class="main-content" style="display: flex; justify-content: center; padding-top: 2rem;">
+    <?php $gameId = $game['id']; ?>
+    <div class="card" style="max-width: 500px; width: 100%;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div class="stat-chip" style="margin: 0 auto 1rem;">
+                <span class="dot gold"></span>
+                <span>Jeux</span>
             </div>
-            <h1 class="text-4xl font-extrabold tracking-tight text-on-surface mb-2">Modifier le jeu</h1>
-            <p class="text-on-surface-variant font-medium tracking-wide">Mettre à jour les informations</p>
+            <h1 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Modifier le jeu</h1>
+            <p style="color: var(--text-secondary); font-size: 0.875rem;">Mettre à jour les informations</p>
         </div>
         
         <?php if (!empty($errors)): ?>
-            <div class="error-box">
+            <div class="form-error">
                 <?php foreach ($errors as $error): ?>
                     <p><?= htmlspecialchars($error) ?></p>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
         
-        <form method="POST" action="<?= BASE_URL ?>/games/<?= $game['id'] ?>/update" class="space-y-6">
-            <div class="space-y-2">
-                <label class="block font-label text-xs uppercase tracking-widest text-on-surface-variant opacity-70 ml-1" for="name">Nom du jeu</label>
-                <input class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-on-surface outline-none input-focus" name="name" type="text" value="<?= htmlspecialchars($game['name'] ?? '') ?>"/>
+        <?php if (isset($_SESSION['success'])): ?>
+            <div style="background: var(--green-muted); border: 1px solid var(--green); border-radius: var(--radius-md); padding: 0.75rem; margin-bottom: 1rem; color: var(--green-light); font-size: 0.875rem;">
+                <?= htmlspecialchars($_SESSION['success']) ?>
             </div>
-            
-            <div class="space-y-2">
-                <label class="block font-label text-xs uppercase tracking-widest text-on-surface-variant opacity-70 ml-1" for="category">Catégorie</label>
-                <div class="relative">
-                    <select class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-on-surface outline-none input-focus appearance-none cursor-pointer" name="category">
-                        <option value="Stratégie" <?= ($game['category'] ?? '') === 'Stratégie' ? 'selected' : '' ?>>Stratégie</option>
-                        <option value="Famille" <?= ($game['category'] ?? '') === 'Famille' ? 'selected' : '' ?>>Famille</option>
-                        <option value="Ambiance" <?= ($game['category'] ?? '') === 'Ambiance' ? 'selected' : '' ?>>Ambiance</option>
-                        <option value="Experts" <?= ($game['category'] ?? '') === 'Experts' ? 'selected' : '' ?>>Experts</option>
-                    </select>
-                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+            <?php unset($_SESSION['success']); ?>
+        <?php endif; ?>
+        
+        <!-- Form to add copies -->
+        <form method="POST" action="<?= BASE_URL ?>/games/<?= $gameId ?>/add-copy" style="margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-card-hover); border-radius: var(--radius-md);">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <p style="font-size: 0.8125rem; color: var(--text-muted); margin: 0;">
+                        Exemplaires: <strong><?= (int)($game['total_copies'] ?? 0) ?></strong>
+                    </p>
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <input type="number" name="copies" class="form-input" min="1" max="10" value="1" style="width: 70px; padding: 0.5rem;"/>
+                    <button type="submit" class="btn btn-success btn-sm">Ajouter</button>
                 </div>
             </div>
-            
-            <div class="space-y-2">
-                <label class="block font-label text-xs uppercase tracking-widest text-on-surface-variant opacity-70 ml-1" for="description">Description</label>
-                <textarea class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-on-surface outline-none input-focus resize-none leading-relaxed" name="description" rows="4"><?= htmlspecialchars($game['description'] ?? '') ?></textarea>
+        </form>
+        
+        <!-- Main form to update game -->
+        <form method="POST" action="<?= BASE_URL ?>/games/<?= $gameId ?>/update">
+            <div class="form-group">
+                <label class="form-label" for="name">Nom du jeu</label>
+                <input type="text" id="name" name="name" class="form-input" value="<?= htmlspecialchars($game['name'] ?? '') ?>"/>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="space-y-2">
-                    <label class="block font-label text-xs uppercase tracking-widest text-on-surface-variant opacity-70 ml-1" for="difficulty">Difficulté</label>
-                    <div class="flex items-center gap-4 bg-surface-container-high p-4 rounded-lg">
-                        <input class="flex-grow accent-primary h-2 rounded-full cursor-pointer" name="difficulty" max="5" min="1" type="range" value="<?= $game['difficulty'] ?? 3 ?>"/>
-                        <span class="text-primary font-bold text-lg w-4"><?= $game['difficulty'] ?? 3 ?></span>
+            <div class="form-group">
+                <label class="form-label" for="category">Catégorie</label>
+                <select id="category" name="category" class="form-select">
+                    <option value="Stratégie" <?= ($game['category'] ?? '') === 'Stratégie' ? 'selected' : '' ?>>Stratégie</option>
+                    <option value="Famille" <?= ($game['category'] ?? '') === 'Famille' ? 'selected' : '' ?>>Famille</option>
+                    <option value="Ambiance" <?= ($game['category'] ?? '') === 'Ambiance' ? 'selected' : '' ?>>Ambiance</option>
+                    <option value="Experts" <?= ($game['category'] ?? '') === 'Experts' ? 'selected' : '' ?>>Experts</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="description">Description</label>
+                <textarea id="description" name="description" class="form-textarea" rows="3"><?= htmlspecialchars($game['description'] ?? '') ?></textarea>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label class="form-label" for="difficulty">Difficulté</label>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; background: var(--bg-input); padding: 0.75rem; border-radius: var(--radius-md);">
+                        <input type="range" name="difficulty" min="1" max="5" value="<?= $game['difficulty'] ?? 3 ?>" style="flex: 1; accent-color: var(--gold);"/>
+                        <span style="color: var(--gold); font-weight: 700; min-width: 20px; text-align: center;"><?= $game['difficulty'] ?? 3 ?></span>
                     </div>
                 </div>
-                <div class="space-y-2">
-                    <label class="block font-label text-xs uppercase tracking-widest text-on-surface-variant opacity-70 ml-1" for="duration_minutes">Durée (minutes)</label>
-                    <input class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-on-surface outline-none input-focus" name="duration_minutes" type="number" value="<?= $game['duration_minutes'] ?? 60 ?>"/>
+                <div class="form-group">
+                    <label class="form-label" for="duration_minutes">Durée (min)</label>
+                    <input type="number" id="duration_minutes" name="duration_minutes" class="form-input" value="<?= $game['duration_minutes'] ?? 60 ?>"/>
                 </div>
             </div>
             
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-2">
-                    <label class="block font-label text-xs uppercase tracking-widest text-on-surface-variant opacity-70 ml-1" for="min_players">Joueurs min</label>
-                    <input class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-on-surface outline-none input-focus" name="min_players" type="number" value="<?= $game['min_players'] ?? 2 ?>"/>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label class="form-label" for="min_players">Joueurs min</label>
+                    <input type="number" id="min_players" name="min_players" class="form-input" value="<?= $game['min_players'] ?? 2 ?>"/>
                 </div>
-                <div class="space-y-2">
-                    <label class="block font-label text-xs uppercase tracking-widest text-on-surface-variant opacity-70 ml-1" for="max_players">Joueurs max</label>
-                    <input class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-on-surface outline-none input-focus" name="max_players" type="number" value="<?= $game['max_players'] ?? 4 ?>"/>
+                <div class="form-group">
+                    <label class="form-label" for="max_players">Joueurs max</label>
+                    <input type="number" id="max_players" name="max_players" class="form-input" value="<?= $game['max_players'] ?? 4 ?>"/>
                 </div>
             </div>
             
             <?php if (!empty($_SESSION['csrf_token'])): ?>
                 <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
             <?php endif; ?>
-            
-            <div class="pt-4 space-y-4">
-                <button class="w-full btn-primary font-bold py-4 px-6 rounded-lg transition-all flex items-center justify-center gap-2" type="submit">
-                    <span class="material-symbols-outlined">save</span>
-                    Enregistrer les modifications
+
+            <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    <span class="material-icons">save</span>
+                    Enregistrer
                 </button>
-                <a href="<?= BASE_URL ?>/games/<?= $game['id'] ?>" class="w-full border-2 border-error text-error font-bold py-4 px-6 rounded-lg hover:bg-error/10 transition-all flex items-center justify-center gap-2 text-center">
-                    <span class="material-symbols-outlined">close</span>
+                <a href="<?= BASE_URL ?>/games/<?= $gameId ?>" class="btn btn-danger">
+                    <span class="material-icons">close</span>
                     Annuler
                 </a>
             </div>

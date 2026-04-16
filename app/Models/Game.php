@@ -55,4 +55,35 @@ class Game {
         $stmt = $pdo->prepare('DELETE FROM games WHERE id = ?');
         return $stmt->execute([$id]);
     }
+
+    public static function allWithAvailability(): array {
+        $pdo = Database::connect();
+        $stmt = $pdo->query('
+            SELECT 
+                g.*,
+                COALESCE(COUNT(c.id), 0) as total_copies,
+                COALESCE(SUM(CASE WHEN c.status = "available" THEN 1 ELSE 0 END), 0) as available_copies
+            FROM games g
+            LEFT JOIN game_copies c ON g.id = c.game_id
+            GROUP BY g.id
+            ORDER BY g.name ASC
+        ');
+        return $stmt->fetchAll();
+    }
+
+    public static function findWithAvailability(int $id): array|false {
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare('
+            SELECT 
+                g.*,
+                COALESCE(COUNT(c.id), 0) as total_copies,
+                COALESCE(SUM(CASE WHEN c.status = "available" THEN 1 ELSE 0 END), 0) as available_copies
+            FROM games g
+            LEFT JOIN game_copies c ON g.id = c.game_id
+            WHERE g.id = ?
+            GROUP BY g.id
+        ');
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
 }
