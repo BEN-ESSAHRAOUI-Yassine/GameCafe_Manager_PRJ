@@ -1,6 +1,6 @@
 <main class="main-content">
     <div class="page-header">
-        <header style="display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 1.5rem; margin-bottom: 2rem;">
+        <header style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; margin-bottom: 2rem;">
             <div>
                 <div class="stat-chip" style="margin-bottom: 1rem;">
                     <span class="dot gold"></span>

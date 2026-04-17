@@ -66,7 +66,7 @@
         <div class="auth-footer">
             <p>Déjà un compte ? <a href="<?= BASE_URL ?>/login">Se connecter</a></p>
         </div>
+        
+        <p class="auth-copyright">© 2026 Aji L3bo Café</p>
     </div>
-
-    <p class="auth-copyright">© 2026 Aji L3bo Café</p>
 </main>

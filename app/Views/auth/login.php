@@ -54,7 +54,7 @@
         <div class="auth-footer">
             <p>Pas de compte ? <a href="<?= BASE_URL ?>/register">S'inscrire</a></p>
         </div>
+        
+        <p class="auth-copyright">© 2026 Aji L3bo Café</p>
     </div>
-
-    <p class="auth-copyright">© 2026 Aji L3bo Café</p>
 </main>
