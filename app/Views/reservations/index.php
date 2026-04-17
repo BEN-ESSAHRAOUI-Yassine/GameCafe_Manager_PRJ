@@ -46,6 +46,7 @@
                                 </div>
                             </td>
                             <td>
+                                <?php if ($reservation['status'] === 'pending'): ?>
                                 <?php
                                 $reservedAt = $reservation['reserved_at'];
                                 $duration = $reservation['duration_hours'] ?? 1;
@@ -70,6 +71,11 @@
                                         <span class="material-icons">cached</span>
                                     </button>
                                 </form>
+                                <?php else: ?>
+                                    <span style="padding: 0.25rem 0.5rem; background: var(--bg-card-hover); border-radius: var(--radius-sm); font-size: 0.8125rem;">
+                                        <?= htmlspecialchars($reservation['table_name'] ?? $reservation['table'] ?? 'Table') ?>
+                                    </span>
+                                <?php endif; ?>
                             </td>
                             <td><?= htmlspecialchars(date('d/m/Y H:i', strtotime($reservation['reserved_at'] ?? $reservation['date']))) ?></td>
                             <td class="text-center"><?= $reservation['duration_hours'] ?? $reservation['duration'] ?? 1 ?>h</td>
