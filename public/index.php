@@ -2,8 +2,8 @@
 $basePath = str_replace('C:\\xampp\\htdocs', '', __DIR__);
 $basePath = str_replace('\\', '/', $basePath);
 
-define('BASE_URL', $basePath);
-//define('BASE_URL', '/GameCafe_Manager_PRJ/public');
+//define('BASE_URL', $basePath);
+define('BASE_URL', '/GameCafe_Manager_PRJ/public');
 
 //var_dump(BASE_URL);//C:\xampp\htdocs\
 //echo "start";

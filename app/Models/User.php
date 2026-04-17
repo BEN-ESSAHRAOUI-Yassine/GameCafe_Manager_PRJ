@@ -35,7 +35,7 @@ class User {
         return $stmt->fetch();
     }
 
-    public function adminExists() {
+    public static function adminExists() {
         $pdo = Database::connect();
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE role='admin'");
         $stmt->execute();
