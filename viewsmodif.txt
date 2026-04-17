@@ -1,8 +1,0 @@
-we need to implement this changes in the views folder with the same existing style:
-
-in games we need to make the edit and create buttons just for the admin role (visible in the games/index.php just for the admin )
-the user in this page can see just the games without any add or modify buttons
-
-
-we will have two main pages in the reservations one for the admin (Voir et gérer toutes les réservations (confirmer / annuler)) , the second one is for the user  can see his curent reservations and the history
-in the reservation folder we need to add a show.php when the admin or the user check the detail of the reservation
